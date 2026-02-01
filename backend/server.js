@@ -39,7 +39,6 @@ const seedAdmin = async () => {
         console.error('Admin seeding failed:', error);
     }
 };
-// Execution handled in start function
 
 // Middleware
 app.use(cors());
@@ -54,11 +53,15 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/about', require('./routes/aboutRoutes'));
 app.use('/api/upload', require('./routes/uploadRoutes'));
 
+// Root route added here:
+app.get('/', (req, res) => {
+    res.send('Blog API is running 🚀');
+});
+
 // Serve static assets from frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
 // Serve uploaded files
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
-
 
 // Fallback for non-API routes to serve index.html
 app.use((req, res, next) => {
@@ -88,9 +91,6 @@ cron.schedule('0 0 * * *', () => {
 });
 
 const PORT = process.env.PORT || 5000;
-
-
-
 
 const startServer = async () => {
     try {
