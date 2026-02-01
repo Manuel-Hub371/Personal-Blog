@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Manuel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container nav">
+            <a href="index.html" class="logo">Manuel</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="projects.html" class="active">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li class="theme-toggle-mobile" id="theme-toggle-mobile">
+                    <span>Theme</span>
+                    <button class="theme-toggle" aria-label="Toggle Theme"></button>
+                </li>
+            </ul>
+            <button class="menu-toggle" aria-label="Toggle Menu"><i data-lucide="menu"></i></button>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme"></button>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 160px;">
+        <div class="reveal">
+            <h1 style="font-size: 3.5rem; margin-bottom: 16px;">Selected <span
+                    style="color: var(--primary);">Works</span></h1>
+            <p style="color: var(--text-muted); font-size: 1.25rem; max-width: 600px; margin-bottom: 64px;">A
+                collection of projects I've built, experimenting with new technologies and design systems.</p>
+        </div>
+
+        <div id="all-projects-container" class="card-grid">
+            <p>Loading projects...</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container reveal">
+            <div class="socials">
+                <a href="https://wa.me/0549820094" target="_blank" aria-label="WhatsApp"><i data-lucide="phone"></i></a>
+                <a href="https://instagram.com/_niqg.theace_" target="_blank" aria-label="Instagram"><i
+                        data-lucide="instagram"></i></a>
+                <a href="https://facebook.com/yourusername" target="_blank" aria-label="Facebook"><i
+                        data-lucide="facebook"></i></a>
+                <a href="https://twitter.com/yourusername" target="_blank" aria-label="Twitter"><i
+                        data-lucide="twitter"></i></a>
+                <a href="https://github.com/Manuel-Hub371" target="_blank" aria-label="GitHub"><i
+                        data-lucide="github"></i></a>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">&copy; 2026 Manuel. Built with passion and
+                precision.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const projectsContainer = document.getElementById('all-projects-container');
+            const observerOptions = { threshold: 0.1 };
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+            }, observerOptions);
+
+            try {
+                const projects = await api.getProjects();
+                projectsContainer.innerHTML = '';
+
+                if (projects.length === 0) {
+                    projectsContainer.innerHTML = '<p>No projects showcased yet. Check back later!</p>';
+                    return;
+                }
+
+                projects.forEach(project => {
+                    const card = document.createElement('div');
+                    card.className = 'glass-card project-card reveal';
+                    card.innerHTML = `
+                        <img src="${project.image || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80'}" alt="${project.title}">
+                        <span class="card-tag">Project</span>
+                        <h3>${project.title}</h3>
+                        <p style="color: var(--text-muted); margin: 12px 0 20px;">${project.description}</p>
+                        <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+                            ${(project.technologies || []).map(tech => `<span style="font-size: 0.7rem; background: var(--border-glass); padding: 4px 12px; border-radius: 20px;">${tech}</span>`).join('')}
+                        </div>
+                        <a href="project.html?id=${project._id}" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">View Case Study</a>
+                    `;
+                    projectsContainer.appendChild(card);
+                    revealObserver.observe(card);
+                });
+            } catch (error) {
+                projectsContainer.innerHTML = '<p>Error loading projects.</p>';
+            }
+        });
+    </script>
+</body>
+
+</html>

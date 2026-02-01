@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manuel | Personal Blog</title>
+    <meta name="description"
+        content="Personal portfolio and blog of Manuel, a developer exploring technology, design, and software engineering.">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container nav">
+            <a href="index.html" class="logo">Manuel-HUB</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li class="theme-toggle-mobile" id="theme-toggle-mobile">
+                    <span>Theme</span>
+                    <button class="theme-toggle" aria-label="Toggle Theme"></button>
+                </li>
+            </ul>
+            <button class="menu-toggle" aria-label="Toggle Menu"><i data-lucide="menu"></i></button>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+                <!-- Icon inserted by JS -->
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-content reveal">
+                <h1>Crafting <span style="color: var(--primary);">experiences</span> through code.</h1>
+                <p>Welcome to my personal corner of the web. I'm Manuel, a developer exploring the intersection of
+                    technology and design.</p>
+                <div class="hero-btns">
+                    <a href="blog.html" class="btn btn-primary">Read My Blog</a>
+                    <a href="about.html" class="btn btn-outline" style="margin-left: 16px;">More About Me</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container reveal" style="padding: 100px 24px;">
+            <h2 class="section-title">Latest <span style="color: var(--primary);">Thoughts</span></h2>
+            <div id="posts-container" class="card-grid">
+                <!-- Posts loaded via JS -->
+                <p>Loading inspiration...</p>
+            </div>
+        </section>
+
+        <section class="container reveal" style="padding: 100px 24px; border-top: 1px solid var(--border-glass);">
+            <h2 class="section-title">Selected <span style="color: var(--primary);">Works</span></h2>
+            <div id="projects-container" class="card-grid">
+                <!-- Projects loaded via JS -->
+                <p>Loading projects...</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container reveal">
+            <div class="socials">
+                <a href="https://wa.me/0549820094" target="_blank" aria-label="WhatsApp"><i data-lucide="phone"></i></a>
+                <a href="https://instagram.com/_niqg.theace_" target="_blank" aria-label="Instagram"><i
+                        data-lucide="instagram"></i></a>
+                <a href="https://facebook.com/yourusername" target="_blank" aria-label="Facebook"><i
+                        data-lucide="facebook"></i></a>
+                <a href="https://twitter.com/yourusername" target="_blank" aria-label="Twitter"><i
+                        data-lucide="twitter"></i></a>
+                <a href="https://github.com/Manuel-Hub371" target="_blank" aria-label="GitHub"><i
+                        data-lucide="github"></i></a>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">&copy; 2026 Manuel. Built with passion and
+                precision.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const postsContainer = document.getElementById('posts-container');
+            const projectsContainer = document.getElementById('projects-container');
+
+            try {
+                // Load Posts
+                const posts = await api.getPosts();
+                postsContainer.innerHTML = '';
+                if (posts.length === 0) {
+                    postsContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">No articles yet. Check back soon!</p>';
+                } else {
+                    posts.slice(0, 3).forEach(post => {
+                        const card = document.createElement('div');
+                        card.className = 'glass-card post-card reveal';
+                        card.innerHTML = `
+                            <img src="${post.coverImage || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}">
+                            <span class="card-tag">Article</span>
+                            <h3>${post.title}</h3>
+                            <p style="color: var(--text-muted); margin: 12px 0 20px;">${post.content.substring(0, 100)}...</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">${formatDate(post.createdAt)}</span>
+                                <a href="post.html?id=${post._id}" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">Read More</a>
+                            </div>
+                        `;
+                        postsContainer.appendChild(card);
+                    });
+                }
+
+                // Load Projects
+                const projects = await api.getProjects();
+                projectsContainer.innerHTML = '';
+                if (projects.length === 0) {
+                    projectsContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">No projects showcased yet.</p>';
+                } else {
+                    projects.forEach(project => {
+                        const card = document.createElement('div');
+                        card.className = 'glass-card project-card reveal';
+                        card.innerHTML = `
+                        <img src="${project.image || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80'}" alt="${project.title}">
+                        <span class="card-tag">Project</span>
+                        <h3>${project.title}</h3>
+                        <p style="color: var(--text-muted); margin: 12px 0 20px;">${project.description}</p>
+                        <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+                            ${(project.technologies || []).map(tech => `<span style="font-size: 0.7rem; background: var(--border-glass); padding: 4px 12px; border-radius: 20px;">${tech}</span>`).join('')}
+                        </div>
+                        ${project.link ? `<a href="${project.link}" target="_blank" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">View Project</a>` : ''}
+                    `;
+                        projectsContainer.appendChild(card);
+                    });
+                }
+
+                // Re-initialize reveal observer for new elements
+                const revealItems = document.querySelectorAll('.reveal');
+                const revealObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) entry.target.classList.add('active');
+                    });
+                }, { threshold: 0.1 });
+                revealItems.forEach(item => revealObserver.observe(item));
+
+            } catch (error) {
+                console.error("Error loading home page content:", error);
+            }
+        });
+    </script>
+</body>
+
+</html>

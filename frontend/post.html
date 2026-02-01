@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story | Manuel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .post-header {
+            margin-bottom: 48px;
+            text-align: center;
+        }
+
+        .post-cover {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 32px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow-premium);
+        }
+
+        .post-body {
+            font-size: 1.15rem;
+            color: var(--text-main);
+            line-height: 1.8;
+        }
+
+        .post-body p {
+            margin-bottom: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container nav">
+            <a href="index.html" class="logo">Manuel</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li class="theme-toggle-mobile" id="theme-toggle-mobile">
+                    <span>Theme</span>
+                    <button class="theme-toggle" aria-label="Toggle Theme"></button>
+                </li>
+            </ul>
+            <button class="menu-toggle" aria-label="Toggle Menu"><i data-lucide="menu"></i></button>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme"></button>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 160px; max-width: 800px;">
+        <div id="post-view">
+            <p>Gathering thoughts...</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container reveal">
+            <div class="socials">
+                <a href="https://wa.me/0549820094" target="_blank" aria-label="WhatsApp"><i data-lucide="phone"></i></a>
+                <a href="https://instagram.com/_niqg.theace_" target="_blank" aria-label="Instagram"><i
+                        data-lucide="instagram"></i></a>
+                <a href="https://facebook.com/yourusername" target="_blank" aria-label="Facebook"><i
+                        data-lucide="facebook"></i></a>
+                <a href="https://twitter.com/yourusername" target="_blank" aria-label="Twitter"><i
+                        data-lucide="twitter"></i></a>
+                <a href="https://github.com/Manuel-Hub371" target="_blank" aria-label="GitHub"><i
+                        data-lucide="github"></i></a>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">&copy; 2026 Manuel. Built with passion and
+                precision.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+            const postView = document.getElementById('post-view');
+
+            if (!postId) {
+                postView.innerHTML = '<p>Story not found.</p>';
+                return;
+            }
+
+            try {
+                const post = await api.getPost(postId);
+                if (post.message) {
+                    postView.innerHTML = `<p>${post.message}</p>`;
+                    return;
+                }
+
+                postView.innerHTML = `
+                    <article class="reveal active">
+                        <header class="post-header" style="position: relative;">
+                            <span class="card-tag">Published ${formatDate(post.createdAt)}</span>
+                            <h1 style="font-size: 3.5rem; line-height: 1.2; margin-bottom: 24px;">${post.title}</h1>
+                            ${post.tags.length ? `<div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 40px;">
+                                ${post.tags.map(t => `<span style="font-size: 0.75rem; background: var(--border-glass); padding: 4px 12px; border-radius: 20px;">${t}</span>`).join('')}
+                            </div>` : ''}
+                        </header>
+                        
+                        <img class="post-cover" src="${post.coverImage || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200'}" alt="${post.title}">
+                        
+                        <div class="glass-card post-body">
+                            <div class="content-html">${post.content}</div>
+                        </div>
+                    </article>
+                `;
+
+                // Add styles for the content
+                const style = document.createElement('style');
+                style.innerHTML = `
+                    .content-html img { max-width: 100%; height: auto; border-radius: 8px; margin: 20px 0; }
+                    .content-html table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    .content-html th, .content-html td { border: 1px solid var(--border-glass); padding: 8px; }
+                    .content-html ul, .content-html ol { margin-left: 20px; margin-bottom: 20px; }
+                    .content-html h2 { margin-top: 32px; margin-bottom: 16px; color: var(--primary); }
+                    .content-html a { color: var(--primary); text-decoration: underline; }
+                `;
+                document.head.appendChild(style);
+
+                document.title = `${post.title} | Manuel`;
+            } catch (error) {
+                postView.innerHTML = '<p>Error loading story details.</p>';
+            }
+        });
+    </script>
+</body>
+
+</html>

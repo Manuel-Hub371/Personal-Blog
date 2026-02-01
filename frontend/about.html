@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Manuel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container nav">
+            <a href="index.html" class="logo">Manuel</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li class="theme-toggle-mobile" id="theme-toggle-mobile">
+                    <span>Theme</span>
+                    <button class="theme-toggle" aria-label="Toggle Theme"></button>
+                </li>
+            </ul>
+            <button class="menu-toggle" aria-label="Toggle Menu"><i data-lucide="menu"></i></button>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme"></button>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 160px;">
+        <div class="reveal about-grid">
+            <div class="about-image">
+                <img id="profile-image"
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
+                    alt="Manuel" style="width: 100%; border-radius: 32px; box-shadow: var(--shadow-premium);">
+            </div>
+            <div class="about-text">
+                <h1 style="margin-bottom: 24px; font-size: 3rem;">Hello, I'm <span
+                        style="color: var(--primary);">Manuel</span>.</h1>
+                <p id="user-bio"
+                    style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 32px; line-height: 1.6;">
+                    Loading bio...
+                </p>
+                <div class="glass-card reveal" style="margin-bottom: 32px;">
+                    <h3>My Journey</h3>
+                    <p id="journey-text" style="color: var(--text-muted); margin-top: 16px; line-height: 1.6;">
+                        Loading journey...
+                    </p>
+                </div>
+                <div class="reveal">
+                    <h3>What I Do</h3>
+                    <ul id="skills-list" class="skill-chips">
+                        <li class="skill-chip">Loading skills...</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container reveal">
+            <div class="socials">
+                <a href="https://wa.me/0549820094" target="_blank" aria-label="WhatsApp"><i data-lucide="phone"></i></a>
+                <a href="https://instagram.com/_niqg.theace_" target="_blank" aria-label="Instagram"><i
+                        data-lucide="instagram"></i></a>
+                <a href="https://facebook.com/yourusername" target="_blank" aria-label="Facebook"><i
+                        data-lucide="facebook"></i></a>
+                <a href="https://twitter.com/yourusername" target="_blank" aria-label="Twitter"><i
+                        data-lucide="twitter"></i></a>
+                <a href="https://github.com/Manuel-Hub371" target="_blank" aria-label="GitHub"><i
+                        data-lucide="github"></i></a>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">&copy; 2026 Manuel. Built with passion and
+                precision.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Load About Content from API
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch('/api/about');
+                const data = await response.json();
+
+                // Update bio
+                document.getElementById('user-bio').textContent = data.bio;
+
+                // Update journey
+                document.getElementById('journey-text').textContent = data.journey;
+
+                // Update profile image
+                const profileImage = document.getElementById('profile-image');
+                profileImage.src = data.profileImage;
+                profileImage.alt = 'Manuel';
+
+                // Update skills list
+                const skillsList = document.getElementById('skills-list');
+                skillsList.innerHTML = '';
+                data.skills.forEach(skill => {
+                    const li = document.createElement('li');
+                    li.style.marginBottom = '12px';
+                    li.textContent = skill;
+                    skillsList.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Error loading about content:', error);
+                document.getElementById('user-bio').textContent = 'Failed to load bio.';
+                document.getElementById('journey-text').textContent = 'Failed to load journey.';
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Manuel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container nav">
+            <a href="index.html" class="logo">Manuel</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html" class="active">Blog</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li class="theme-toggle-mobile" id="theme-toggle-mobile">
+                    <span>Theme</span>
+                    <button class="theme-toggle" aria-label="Toggle Theme"></button>
+                </li>
+            </ul>
+            <button class="menu-toggle" aria-label="Toggle Menu"><i data-lucide="menu"></i></button>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme"></button>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 160px;">
+        <div class="reveal">
+            <h1 style="font-size: 3.5rem; margin-bottom: 16px;">Insights & <span
+                    style="color: var(--primary);">Tutorials</span></h1>
+            <p style="color: var(--text-muted); font-size: 1.25rem; max-width: 600px; margin-bottom: 64px;">Thoughts on
+                software engineering, design, and my latest tech discoveries.</p>
+        </div>
+
+        <div id="all-posts-container" class="card-grid">
+            <p>Loading posts...</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container reveal">
+            <div class="socials">
+                <a href="https://wa.me/0549820094" target="_blank" aria-label="WhatsApp"><i data-lucide="phone"></i></a>
+                <a href="https://instagram.com/_niqg.theace_" target="_blank" aria-label="Instagram"><i
+                        data-lucide="instagram"></i></a>
+                <a href="https://facebook.com/yourusername" target="_blank" aria-label="Facebook"><i
+                        data-lucide="facebook"></i></a>
+                <a href="https://twitter.com/yourusername" target="_blank" aria-label="Twitter"><i
+                        data-lucide="twitter"></i></a>
+                <a href="https://github.com/Manuel-Hub371" target="_blank" aria-label="GitHub"><i
+                        data-lucide="github"></i></a>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">&copy; 2026 Manuel. Built with passion and
+                precision.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const postsContainer = document.getElementById('all-posts-container');
+            const observerOptions = { threshold: 0.1 };
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+            }, observerOptions);
+
+            try {
+                const posts = await api.getPosts();
+                postsContainer.innerHTML = '';
+
+                if (posts.length === 0) {
+                    postsContainer.innerHTML = '<p>No stories found yet. Come back later!</p>';
+                    return;
+                }
+
+                posts.forEach(post => {
+                    const card = document.createElement('div');
+                    card.className = 'glass-card post-card reveal';
+                    card.innerHTML = `
+                        <img src="${post.coverImage || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}">
+                        <span class="card-tag">Article</span>
+                        <h3>${post.title}</h3>
+                        <p style="color: var(--text-muted); margin: 12px 0 20px;">${post.content.substring(0, 120)}...</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">${formatDate(post.createdAt)}</span>
+                            <a href="post.html?id=${post._id}" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">Read Story</a>
+                        </div>
+                    `;
+                    postsContainer.appendChild(card);
+                    revealObserver.observe(card);
+                });
+            } catch (error) {
+                postsContainer.innerHTML = '<p>Error loading our stories.</p>';
+            }
+        });
+    </script>
+</body>
+
+</html>

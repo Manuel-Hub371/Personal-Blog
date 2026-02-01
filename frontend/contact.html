@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Manuel</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <header>
+        <div class="container nav">
+            <a href="index.html" class="logo">Manuel</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="projects.html">Projects</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+                <li class="theme-toggle-mobile" id="theme-toggle-mobile">
+                    <span>Theme</span>
+                    <button class="theme-toggle" aria-label="Toggle Theme"></button>
+                </li>
+            </ul>
+            <button class="menu-toggle" aria-label="Toggle Menu"><i data-lucide="menu"></i></button>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme"></button>
+        </div>
+    </header>
+
+    <main class="container" style="padding-top: 160px; max-width: 600px;">
+        <div class="reveal">
+            <h1 style="font-size: 3.5rem; margin-bottom: 16px; text-align: center;">Let's <span
+                    style="color: var(--primary);">Connect</span></h1>
+            <p style="color: var(--text-muted); text-align: center; font-size: 1.15rem; margin-bottom: 48px;">Have a
+                project in mind or just want to say hi? I'd love to hear from you.</p>
+
+            <form id="contact-form" class="glass-card">
+                <div class="form-group">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Name</label>
+                    <input type="text" id="name" required placeholder="Jane Doe">
+                </div>
+                <div class="form-group">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Email Address</label>
+                    <input type="email" id="email" required placeholder="jane@example.com">
+                </div>
+                <div class="form-group">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Your Message</label>
+                    <textarea id="message" rows="6" required placeholder="How can I help you?"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send
+                    Message</button>
+                <div id="form-status"
+                    style="margin-top: 24px; text-align: center; border-radius: 12px; padding: 12px; display: none;">
+                </div>
+            </form>
+
+            <div class="reveal" style="margin-top: 64px; text-align: center;">
+                <p style="color: var(--text-muted); margin-bottom: 24px;">Or reach me directly on</p>
+                <div class="socials" style="display: flex; justify-content: center; font-size: 1.5rem; gap: 40px;">
+                    <a href="https://wa.me/0549820094" target="_blank" style="color: #25D366;" aria-label="WhatsApp"><i
+                            data-lucide="phone"></i></a>
+                    <a href="https://instagram.com/_niqg.theace_" target="_blank" style="color: #E1306C;"
+                        aria-label="Instagram"><i data-lucide="instagram"></i></a>
+                    <a href="https://facebook.com/yourusername" target="_blank" style="color: #1877F2;"
+                        aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="socials">
+                <a href="https://wa.me/0549820094" target="_blank" aria-label="WhatsApp"><i data-lucide="phone"></i></a>
+                <a href="https://instagram.com/_niqg.theace_" target="_blank" aria-label="Instagram"><i
+                        data-lucide="instagram"></i></a>
+                <a href="https://facebook.com/yourusername" target="_blank" aria-label="Facebook"><i
+                        data-lucide="facebook"></i></a>
+                <a href="https://twitter.com/yourusername" target="_blank" aria-label="Twitter"><i
+                        data-lucide="twitter"></i></a>
+                <a href="https://github.com/Manuel-Hub371" target="_blank" aria-label="GitHub"><i
+                        data-lucide="github"></i></a>
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">&copy; 2026 Manuel. Built with passion and
+                precision.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('contact-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const status = document.getElementById('form-status');
+            const btn = e.target.querySelector('button');
+
+            const data = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                message: document.getElementById('message').value
+            };
+
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Sending...';
+                const res = await api.sendMessage(data);
+
+                status.style.display = 'block';
+                status.textContent = res.message || 'Message sent! I\'ll get back to you soon.';
+                status.style.background = 'rgba(16, 185, 129, 0.1)';
+                status.style.color = '#10b981';
+
+                e.target.reset();
+            } catch (error) {
+                status.style.display = 'block';
+                status.textContent = 'Something went wrong. Please try again.';
+                status.style.background = 'rgba(239, 68, 68, 0.1)';
+                status.style.color = '#ef4444';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Send Message';
+            }
+        });
+    </script>
+</body>
+
+</html>
