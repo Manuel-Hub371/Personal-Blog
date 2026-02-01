@@ -1,4 +1,4 @@
-const BASE_URL = '/api';
+const BASE_URL = 'https://personal-blog-cqk4.onrender.com/api';
 
 const api = {
     // Helper to get headers with token if available
