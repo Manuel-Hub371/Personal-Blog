@@ -1,4 +1,5 @@
-const BASE_URL = 'https://personal-blog-cqk4.onrender.com/api';
+const API_BASE_URL = 'https://personal-blog-cqk4.onrender.com/api';
+const STATIC_BASE_URL = 'https://personal-blog-cqk4.onrender.com';
 
 const api = {
     // Helper to get headers with token if available
@@ -24,7 +25,7 @@ const api = {
 
     // Auth
     login: async (credentials) => {
-        const res = await fetch(`${BASE_URL}/auth/login`, {
+        const res = await fetch(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(credentials)
@@ -47,7 +48,7 @@ const api = {
     },
 
     updatePassword: async (data) => {
-        const res = await fetch(`${BASE_URL}/auth/password`, {
+        const res = await fetch(`${API_BASE_URL}/auth/password`, {
             method: 'PUT',
             headers: api.getHeaders(),
             body: JSON.stringify(data)
@@ -57,17 +58,17 @@ const api = {
 
     // Posts
     getPosts: async () => {
-        const res = await fetch(`${BASE_URL}/posts`, { cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/posts`, { cache: 'no-store' });
         return api.handleResponse(res);
     },
 
     getPost: async (id) => {
-        const res = await fetch(`${BASE_URL}/posts/${id}`, { cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/posts/${id}`, { cache: 'no-store' });
         return api.handleResponse(res);
     },
 
     createPost: async (postData) => {
-        const res = await fetch(`${BASE_URL}/posts`, {
+        const res = await fetch(`${API_BASE_URL}/posts`, {
             method: 'POST',
             headers: api.getHeaders(),
             body: JSON.stringify(postData)
@@ -76,7 +77,7 @@ const api = {
     },
 
     updatePost: async (id, postData) => {
-        const res = await fetch(`${BASE_URL}/posts/${id}`, {
+        const res = await fetch(`${API_BASE_URL}/posts/${id}`, {
             method: 'PUT',
             headers: api.getHeaders(),
             body: JSON.stringify(postData)
@@ -85,7 +86,7 @@ const api = {
     },
 
     deletePost: async (id) => {
-        const res = await fetch(`${BASE_URL}/posts/${id}`, {
+        const res = await fetch(`${API_BASE_URL}/posts/${id}`, {
             method: 'DELETE',
             headers: api.getHeaders()
         });
@@ -94,17 +95,17 @@ const api = {
 
     // Project Methods
     getProjects: async () => {
-        const res = await fetch(`${BASE_URL}/projects`, { cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/projects`, { cache: 'no-store' });
         return api.handleResponse(res);
     },
 
     getProject: async (id) => {
-        const res = await fetch(`${BASE_URL}/projects/${id}`, { cache: 'no-store' });
+        const res = await fetch(`${API_BASE_URL}/projects/${id}`, { cache: 'no-store' });
         return api.handleResponse(res);
     },
 
     createProject: async (projectData) => {
-        const res = await fetch(`${BASE_URL}/projects`, {
+        const res = await fetch(`${API_BASE_URL}/projects`, {
             method: 'POST',
             headers: api.getHeaders(),
             body: JSON.stringify(projectData)
@@ -113,7 +114,7 @@ const api = {
     },
 
     updateProject: async (id, projectData) => {
-        const res = await fetch(`${BASE_URL}/projects/${id}`, {
+        const res = await fetch(`${API_BASE_URL}/projects/${id}`, {
             method: 'PUT',
             headers: api.getHeaders(),
             body: JSON.stringify(projectData)
@@ -122,7 +123,7 @@ const api = {
     },
 
     deleteProject: async (id) => {
-        const res = await fetch(`${BASE_URL}/projects/${id}`, {
+        const res = await fetch(`${API_BASE_URL}/projects/${id}`, {
             method: 'DELETE',
             headers: api.getHeaders()
         });
@@ -131,12 +132,12 @@ const api = {
 
     // User
     getUser: async () => {
-        const res = await fetch(`${BASE_URL}/user`);
+        const res = await fetch(`${API_BASE_URL}/user`);
         return await res.json();
     },
 
     updateUser: async (userData) => {
-        const res = await fetch(`${BASE_URL}/user`, {
+        const res = await fetch(`${API_BASE_URL}/user`, {
             method: 'PUT',
             headers: api.getHeaders(),
             body: JSON.stringify(userData)
@@ -147,7 +148,7 @@ const api = {
     // Contact Messages
     getMessages: async (status = '') => {
         const token = localStorage.getItem('adminToken');
-        const url = status ? `${BASE_URL}/contact?status=${status}` : `${BASE_URL}/contact`;
+        const url = status ? `${API_BASE_URL}/contact?status=${status}` : `${API_BASE_URL}/contact`;
         const res = await fetch(url, {
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -155,7 +156,7 @@ const api = {
     },
 
     updateMessageStatus: async (id, status) => {
-        const res = await fetch(`${BASE_URL}/contact/${id}/status`, {
+        const res = await fetch(`${API_BASE_URL}/contact/${id}/status`, {
             method: 'PUT',
             headers: api.getHeaders(),
             body: JSON.stringify({ status })
@@ -164,15 +165,11 @@ const api = {
     },
 
     deleteMessage: async (id) => {
-        // Soft delete (moves to bin) by updating status to 'deleted', 
-        // OR if backend implements specific DELETE route for soft delete.
-        // Based on my controller, DELETE /api/contact/:id IS HARD DELETE.
-        // So for soft delete we use updateMessageStatus(id, 'deleted').
         return api.updateMessageStatus(id, 'deleted');
     },
 
     hardDeleteMessage: async (id) => {
-        const res = await fetch(`${BASE_URL}/contact/${id}`, {
+        const res = await fetch(`${API_BASE_URL}/contact/${id}`, {
             method: 'DELETE',
             headers: api.getHeaders()
         });
@@ -185,7 +182,7 @@ const api = {
         formData.append('image', file);
 
         const token = localStorage.getItem('adminToken');
-        const res = await fetch(`${BASE_URL}/upload`, {
+        const res = await fetch(`${API_BASE_URL}/upload`, {
             method: 'POST',
             headers: { 'Authorization': `Bearer ${token}` }, // No Content-Type for FormData
             body: formData
@@ -194,7 +191,7 @@ const api = {
     },
 
     sendMessage: async (messageData) => {
-        const res = await fetch(`${BASE_URL}/contact`, {
+        const res = await fetch(`${API_BASE_URL}/contact`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(messageData)
@@ -204,12 +201,12 @@ const api = {
 
     // About Content
     getAbout: async () => {
-        const res = await fetch(`${BASE_URL}/about`);
+        const res = await fetch(`${API_BASE_URL}/about`);
         return await res.json();
     },
 
     updateAbout: async (data) => {
-        const res = await fetch(`${BASE_URL}/about`, {
+        const res = await fetch(`${API_BASE_URL}/about`, {
             method: 'PUT',
             headers: api.getHeaders(),
             body: JSON.stringify(data)
