@@ -46,6 +46,26 @@
             </div>
         </section>
 
+        <!-- ABOUT PREVIEW SECTION -->
+        <section class="container reveal" style="padding: 60px 24px; display: flex; justify-content: center;">
+            <div class="glass-card about-preview-card"
+                style="display: flex; align-items: center; gap: 40px; padding: 40px; max-width: 900px; width: 100%;">
+                <img id="home-about-img"
+                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&h=200&q=80"
+                    alt="Profile"
+                    style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary);">
+                <div style="flex: 1;">
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 16px;">About <span
+                            style="color: var(--primary);">Me</span></h2>
+                    <p id="home-about-text"
+                        style="color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; font-size: 1.1rem;">
+                        Loading bio...
+                    </p>
+                    <a href="about.html" class="btn btn-outline">Read More</a>
+                </div>
+            </div>
+        </section>
+
         <section class="container reveal" style="padding: 100px 24px;">
             <h2 class="section-title">Latest <span style="color: var(--primary);">Thoughts</span></h2>
             <div id="posts-container" class="card-grid">
@@ -118,7 +138,8 @@
                 if (projects.length === 0) {
                     projectsContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">No projects showcased yet.</p>';
                 } else {
-                    projects.forEach(project => {
+                    // Show only first 3 projects
+                    projects.slice(0, 3).forEach(project => {
                         const card = document.createElement('div');
                         card.className = 'glass-card project-card reveal';
                         card.innerHTML = `
@@ -147,6 +168,15 @@
             } catch (error) {
                 console.error("Error loading home page content:", error);
             }
+
+            // Load About Preview
+            try {
+                const about = await api.getAbout();
+                if (about) {
+                    if (about.bio) document.getElementById('home-about-text').innerText = about.bio.substring(0, 150) + '...';
+                    if (about.profileImage) document.getElementById('home-about-img').src = about.profileImage;
+                }
+            } catch (e) { console.error("Error loading about:", e); }
         });
     </script>
 </body>

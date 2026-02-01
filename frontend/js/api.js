@@ -179,6 +179,20 @@ const api = {
         return api.handleResponse(res);
     },
 
+    // File Upload
+    uploadImage: async (file) => {
+        const formData = new FormData();
+        formData.append('image', file);
+
+        const token = localStorage.getItem('adminToken');
+        const res = await fetch(`${BASE_URL}/upload`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${token}` }, // No Content-Type for FormData
+            body: formData
+        });
+        return api.handleResponse(res);
+    },
+
     sendMessage: async (messageData) => {
         const res = await fetch(`${BASE_URL}/contact`, {
             method: 'POST',

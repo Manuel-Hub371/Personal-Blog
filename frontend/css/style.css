@@ -601,6 +601,22 @@ textarea:focus {
         margin: 0 auto;
     }
 
+    .about-preview-card {
+        flex-direction: column !important;
+        text-align: center;
+        gap: 24px !important;
+        padding: 32px 24px !important;
+    }
+
+    .about-preview-card img {
+        width: 120px !important;
+        height: 120px !important;
+    }
+
+    .about-preview-card h2 {
+        text-align: center !important;
+    }
+
     .about-text {
         width: 100%;
     }

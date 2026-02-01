@@ -240,8 +240,18 @@
                             <textarea id="content" placeholder="Share your thoughts..." rows="6" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="coverImage">Cover Image Link</label>
-                            <input type="text" id="coverImage" placeholder="https://unsplash.com/...">
+                            <label for="coverImage">Cover Image</label>
+                            <div class="image-upload-container">
+                                <div class="image-preview" id="post-image-preview"
+                                    style="width: 100%; height: 200px; background: rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 12px; display: none; background-size: cover; background-position: center;">
+                                </div>
+                                <input type="file" id="post-file-input" accept="image/*" class="form-control"
+                                    onchange="handleImageUpload(this, 'coverImage', 'post-image-preview')">
+                                <input type="hidden" id="coverImage">
+                                <small style="color: var(--text-muted); display: block; margin-top: 4px;">Select an
+                                    image to
+                                    upload. Recommended: 1200x630px.</small>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="tags">Categorize (Comma separated)</label>
@@ -295,8 +305,18 @@
                             <input type="text" id="p-github" placeholder="https://github.com/user/repo">
                         </div>
                         <div class="form-group">
-                            <label for="p-image">Preview Image</label>
-                            <input type="text" id="p-image">
+                            <label for="p-image">Project Preview Image</label>
+                            <div class="image-upload-container">
+                                <div class="image-preview" id="project-image-preview"
+                                    style="width: 100%; height: 200px; background: rgba(0,0,0,0.1); border-radius: 8px; margin-bottom: 12px; display: none; background-size: cover; background-position: center;">
+                                </div>
+                                <input type="file" id="project-file-input" accept="image/*" class="form-control"
+                                    onchange="handleImageUpload(this, 'p-image', 'project-image-preview')">
+                                <input type="hidden" id="p-image">
+                                <small style="color: var(--text-muted); display: block; margin-top: 4px;">Select an
+                                    image to
+                                    upload.</small>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="p-technologies">Tech Stack</label>
@@ -339,8 +359,15 @@
                                 rows="5" required></textarea>
                         </div>
                         <div class="form-group">
-                            <label for="about-image">Profile Image URL</label>
-                            <input type="url" id="about-image" placeholder="https://images.unsplash.com/..." required>
+                            <label for="about-image">Profile Image</label>
+                            <div class="image-upload-container">
+                                <div class="image-preview" id="about-image-preview"
+                                    style="width: 150px; height: 150px; background: rgba(0,0,0,0.1); border-radius: 50%; margin: 0 auto 12px; display: none; background-size: cover; background-position: center;">
+                                </div>
+                                <input type="file" id="about-file-input" accept="image/*" class="form-control"
+                                    onchange="handleImageUpload(this, 'about-image', 'about-image-preview')">
+                                <input type="hidden" id="about-image" required>
+                            </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Save Changes</button>
                         <div id="about-status" style="margin-top: 12px; font-size: 0.85rem; display: none;"></div>
@@ -597,6 +624,32 @@
             window.location.href = 'login.html';
         });
 
+        // --- Image Upload Logic ---
+        async function handleImageUpload(input, hiddenInputId, previewId) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const hiddenInput = document.getElementById(hiddenInputId);
+            const preview = document.getElementById(previewId);
+
+            // Show loading state (optional: turn preview opacity down or show spinner)
+            preview.style.opacity = '0.5';
+
+            try {
+                const res = await api.uploadImage(file);
+                // Success
+                hiddenInput.value = res.location;
+                preview.style.backgroundImage = `url('${res.location}')`;
+                preview.style.display = 'block';
+            } catch (error) {
+                console.error("Upload failed", error);
+                alert("Failed to upload image.");
+            } finally {
+                preview.style.opacity = '1';
+                input.value = ''; // Reset file input so same file can be selected again if needed
+            }
+        }
+
         // --- Content Management ---
         const postForm = document.getElementById('admin-post-form');
         const postList = document.getElementById('admin-post-list');
@@ -689,6 +742,12 @@
                 document.getElementById('about-journey').value = data.journey || '';
                 document.getElementById('about-skills').value = data.skills ? data.skills.join('\n') : '';
                 document.getElementById('about-image').value = data.profileImage || '';
+
+                if (data.profileImage) {
+                    const preview = document.getElementById('about-image-preview');
+                    preview.style.display = 'block';
+                    preview.style.backgroundImage = `url('${data.profileImage}')`;
+                }
             } catch (error) {
                 console.error('Error loading about content:', error);
             }
@@ -733,7 +792,7 @@
         // Post Management
         // Initialize TinyMCE
         tinymce.init({
-            selector: '#content',
+            selector: '#content, #p-content',
             plugins: 'image link lists table code help wordcount',
             toolbar: 'undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help | image code table',
             height: 500,
@@ -810,16 +869,32 @@
         });
 
         async function editPost(id) {
-            const post = await api.getPost(id);
-            document.getElementById('post-id').value = post._id;
-            document.getElementById('title').value = post.title;
-            // document.getElementById('content').value = post.content; // Old way
-            tinymce.get('content').setContent(post.content); // New way
-            document.getElementById('coverImage').value = post.coverImage || '';
-            document.getElementById('tags').value = (post.tags || []).join(', ');
-            document.getElementById('form-title').textContent = 'Modify Story';
-            document.getElementById('cancel-edit').style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            try {
+                const post = await api.getPost(id);
+                document.getElementById('post-id').value = post._id;
+                document.getElementById('title').value = post.title;
+                tinymce.get('content').setContent(post.content);
+                document.getElementById('coverImage').value = post.coverImage || '';
+
+                // Update Preview
+                const preview = document.getElementById('post-image-preview');
+                if (post.coverImage) {
+                    preview.style.display = 'block';
+                    preview.style.backgroundImage = `url('${post.coverImage}')`;
+                } else {
+                    preview.style.display = 'none';
+                }
+
+                document.getElementById('tags').value = (post.tags || []).join(', ');
+                document.getElementById('form-title').textContent = 'Modify Story';
+                document.getElementById('cancel-edit').style.display = 'block';
+                // Scroll to top of form container
+                document.getElementById('admin-post-form-container').scrollIntoView({ behavior: 'smooth' });
+                toggleForm('admin-post-form-container'); // Ensure open
+                if (!document.getElementById('admin-post-form-container').classList.contains('open')) {
+                    document.getElementById('admin-post-form-container').classList.add('open');
+                }
+            } catch (error) { console.error(error); }
         }
 
         async function deletePost(id) {
@@ -836,7 +911,7 @@
             const data = {
                 title: document.getElementById('p-title').value,
                 description: document.getElementById('p-description').value,
-                content: document.getElementById('p-content').value,
+                content: tinymce.get('p-content').getContent(),
                 link: document.getElementById('p-link').value,
                 githubLink: document.getElementById('p-github').value,
                 image: document.getElementById('p-image').value,
@@ -846,6 +921,7 @@
                 if (id) await api.updateProject(id, data);
                 else await api.createProject(data);
                 pForm.reset();
+                tinymce.get('p-content').setContent(''); // Clear editor
                 document.getElementById('project-id').value = '';
                 document.getElementById('cancel-p-edit').style.display = 'none';
                 document.getElementById('project-form-title').textContent = 'New Project';
@@ -854,20 +930,39 @@
         });
 
         async function editProject(id) {
-            const projects = await api.getProjects();
-            const p = projects.find(proj => proj._id === id);
-            document.getElementById('project-id').value = p._id;
-            document.getElementById('p-title').value = p.title;
-            document.getElementById('p-description').value = p.description;
-            document.getElementById('p-content').value = p.content || '';
-            document.getElementById('p-link').value = p.link || '';
-            document.getElementById('p-github').value = p.githubLink || '';
-            document.getElementById('p-image').value = p.image || '';
-            document.getElementById('p-technologies').value = (p.technologies || []).join(', ');
-            document.getElementById('project-form-title').textContent = 'Modify Project';
-            document.getElementById('cancel-p-edit').style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            try {
+                const p = await api.getProject(id);
+                document.getElementById('project-id').value = p._id;
+                document.getElementById('p-title').value = p.title;
+                document.getElementById('p-description').value = p.description;
+                // document.getElementById('p-content').value = p.content || '';
+                tinymce.get('p-content').setContent(p.content || '');
+                document.getElementById('p-link').value = p.link || '';
+                document.getElementById('p-github').value = p.githubLink || '';
+                document.getElementById('p-image').value = p.image || '';
+
+                // Update Preview
+                const preview = document.getElementById('project-image-preview');
+                if (p.image) {
+                    preview.style.display = 'block';
+                    preview.style.backgroundImage = `url('${p.image}')`;
+                } else {
+                    preview.style.display = 'none';
+                }
+
+                document.getElementById('p-technologies').value = p.technologies ? p.technologies.join(', ') : '';
+
+                document.getElementById('project-form-title').innerText = 'Edit Project';
+                document.getElementById('cancel-p-edit').style.display = 'inline-block';
+
+                // Scroll and open
+                document.getElementById('admin-project-form-container').scrollIntoView({ behavior: 'smooth' });
+                if (!document.getElementById('admin-project-form-container').classList.contains('open')) {
+                    document.getElementById('admin-project-form-container').classList.add('open');
+                }
+            } catch (error) { console.error(error); }
         }
+
 
         async function deleteProject(id) {
             if (confirm('Permanently remove this project?')) {
