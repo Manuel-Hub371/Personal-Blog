@@ -14,6 +14,15 @@ const api = {
         return headers;
     },
 
+    // Helper to get full static URL for images
+    getStaticUrl: (path) => {
+        if (!path) return '';
+        if (path.startsWith('http')) return path;
+        // Ensure path starts with / if not present
+        const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+        return `${STATIC_BASE_URL}${normalizedPath}`;
+    },
+
     // Helper to handle response and throw error if not OK
     handleResponse: async (res) => {
         const data = await res.json();

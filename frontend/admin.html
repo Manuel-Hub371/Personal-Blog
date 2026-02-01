@@ -639,7 +639,7 @@
                 const res = await api.uploadImage(file);
                 // Success
                 hiddenInput.value = res.location;
-                preview.style.backgroundImage = `url('${res.location}')`;
+                preview.style.backgroundImage = `url('${api.getStaticUrl(res.location)}')`;
                 preview.style.display = 'block';
             } catch (error) {
                 console.error("Upload failed", error);
@@ -746,7 +746,7 @@
                 if (data.profileImage) {
                     const preview = document.getElementById('about-image-preview');
                     preview.style.display = 'block';
-                    preview.style.backgroundImage = `url('${data.profileImage}')`;
+                    preview.style.backgroundImage = `url('${api.getStaticUrl(data.profileImage)}')`;
                 }
             } catch (error) {
                 console.error('Error loading about content:', error);

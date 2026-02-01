@@ -119,7 +119,7 @@
                         const card = document.createElement('div');
                         card.className = 'glass-card post-card reveal';
                         card.innerHTML = `
-                            <img src="${post.coverImage || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}">
+                            <img src="${api.getStaticUrl(post.coverImage) || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}">
                             <span class="card-tag">Article</span>
                             <h3>${post.title}</h3>
                             <p style="color: var(--text-muted); margin: 12px 0 20px;">${post.content.substring(0, 100)}...</p>
@@ -143,7 +143,7 @@
                         const card = document.createElement('div');
                         card.className = 'glass-card project-card reveal';
                         card.innerHTML = `
-                        <img src="${project.image || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80'}" alt="${project.title}">
+                        <img src="${api.getStaticUrl(project.image) || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80'}" alt="${project.title}">
                         <span class="card-tag">Project</span>
                         <h3>${project.title}</h3>
                         <p style="color: var(--text-muted); margin: 12px 0 20px;">${project.description}</p>
@@ -174,7 +174,7 @@
                 const about = await api.getAbout();
                 if (about) {
                     if (about.bio) document.getElementById('home-about-text').innerText = about.bio.substring(0, 150) + '...';
-                    if (about.profileImage) document.getElementById('home-about-img').src = about.profileImage;
+                    if (about.profileImage) document.getElementById('home-about-img').src = api.getStaticUrl(about.profileImage);
                 }
             } catch (e) { console.error("Error loading about:", e); }
         });

@@ -94,7 +94,7 @@
 
                 // Update profile image
                 const profileImage = document.getElementById('profile-image');
-                profileImage.src = data.profileImage;
+                profileImage.src = api.getStaticUrl(data.profileImage);
                 profileImage.alt = 'Manuel';
 
                 // Update skills list

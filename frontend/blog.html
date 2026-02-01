@@ -83,7 +83,7 @@
                     const card = document.createElement('div');
                     card.className = 'glass-card post-card reveal';
                     card.innerHTML = `
-                        <img src="${post.coverImage || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}">
+                        <img src="${api.getStaticUrl(post.coverImage) || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}">
                         <span class="card-tag">Article</span>
                         <h3>${post.title}</h3>
                         <p style="color: var(--text-muted); margin: 12px 0 20px;">${post.content.substring(0, 120)}...</p>
