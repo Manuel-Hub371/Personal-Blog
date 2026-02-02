@@ -643,7 +643,11 @@
                 preview.style.display = 'block';
             } catch (error) {
                 console.error("Upload failed", error);
-                alert("Failed to upload image.");
+                alert("Failed to upload image: " + error.message);
+                if (error.message.includes('authorized') || error.message.includes('token')) {
+                    api.logout();
+                    window.location.href = 'login.html';
+                }
             } finally {
                 preview.style.opacity = '1';
                 input.value = ''; // Reset file input so same file can be selected again if needed
