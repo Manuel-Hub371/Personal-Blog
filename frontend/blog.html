@@ -86,7 +86,7 @@
                         <img src="${api.getStaticUrl(post.coverImage) || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}">
                         <span class="card-tag">Article</span>
                         <h3>${post.title}</h3>
-                        <p style="color: var(--text-muted); margin: 12px 0 20px;">${post.content.substring(0, 120)}...</p>
+                        <p style="color: var(--text-muted);">${post.content.substring(0, 120)}...</p>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <span style="font-size: 0.8rem; color: var(--text-muted);">${formatDate(post.createdAt)}</span>
                             <a href="post.html?id=${post._id}" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">Read Story</a>

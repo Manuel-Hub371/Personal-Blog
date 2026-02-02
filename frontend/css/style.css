@@ -326,6 +326,12 @@ header {
     margin-bottom: 20px;
 }
 
+.post-card p,
+.project-card p {
+    margin: 12px 0 20px;
+    color: var(--text-muted);
+}
+
 .card-tag {
     font-size: 0.75rem;
     font-weight: 600;
@@ -512,11 +518,12 @@ textarea:focus {
         font-size: 0.7rem;
         /* Reduced from 0.75rem */
         /* Smaller text */
-        line-height: 1.4;
-        margin-bottom: 8px;
+        line-height: 1.25;
         color: var(--text-muted);
-        width: 100%;
-        /* Ensure full width for centering */
+        width: auto;
+        /* Prevent overflow with margins */
+        margin: 0 10px 10px 10px;
+        /* Top Right Bottom Left */
     }
 
     .card-tag {
