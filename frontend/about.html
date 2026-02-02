@@ -118,32 +118,45 @@
         // Load About Content from API
         document.addEventListener('DOMContentLoaded', async () => {
             try {
-                const response = await fetch('/api/about');
-                const data = await response.json();
+                const data = await api.getAbout();
 
                 // Update bio
-                document.getElementById('user-bio').textContent = data.bio;
+                if (data.bio) {
+                    document.getElementById('user-bio').textContent = data.bio;
+                } else {
+                    document.getElementById('user-bio').textContent = 'Bio not available.';
+                }
 
                 // Update journey
-                document.getElementById('journey-text').textContent = data.journey;
+                if (data.journey) {
+                    document.getElementById('journey-text').textContent = data.journey;
+                } else {
+                    document.getElementById('journey-text').textContent = 'Journey not available.';
+                }
 
                 // Update profile image
-                const profileImage = document.getElementById('profile-image');
-                profileImage.src = api.getStaticUrl(data.profileImage);
-                profileImage.alt = 'Manuel';
+                if (data.profileImage) {
+                    const profileImage = document.getElementById('profile-image');
+                    profileImage.src = api.getStaticUrl(data.profileImage);
+                    profileImage.alt = 'Manuel';
+                }
 
                 // Update skills list
                 const skillsList = document.getElementById('skills-list');
                 skillsList.innerHTML = '';
-                data.skills.forEach(skill => {
-                    const li = document.createElement('li');
-                    li.style.marginBottom = '12px';
-                    li.textContent = skill;
-                    skillsList.appendChild(li);
-                });
+                if (data.skills && Array.isArray(data.skills) && data.skills.length > 0) {
+                    data.skills.forEach(skill => {
+                        const li = document.createElement('li');
+                        li.className = 'skill-chip';
+                        li.textContent = skill;
+                        skillsList.appendChild(li);
+                    });
+                } else {
+                    skillsList.innerHTML = '<li class="skill-chip">No skills listed.</li>';
+                }
             } catch (error) {
                 console.error('Error loading about content:', error);
-                document.getElementById('user-bio').textContent = 'Failed to load bio.';
+                document.getElementById('user-bio').textContent = 'Failed to load bio. Please check your connection.';
                 document.getElementById('journey-text').textContent = 'Failed to load journey.';
             }
         });

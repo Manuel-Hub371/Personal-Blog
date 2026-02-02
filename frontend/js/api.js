@@ -224,7 +224,7 @@ const api = {
     // About Content
     getAbout: async () => {
         const res = await fetch(`${API_BASE_URL}/about`);
-        return await res.json();
+        return api.handleResponse(res);
     },
 
     updateAbout: async (data) => {
