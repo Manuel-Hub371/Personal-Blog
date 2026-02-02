@@ -20,16 +20,38 @@ const upload = multer({ storage: storage });
 // @route   POST /api/upload
 // @desc    Upload an image
 // @access  Protected
-router.post('/', protect, upload.single('image'), (req, res) => {
-    if (req.file) {
-        // req.file.path contains the secure_url from Cloudinary
-        res.send({
-            message: 'Image uploaded successfully',
-            location: req.file.path,
-        });
-    } else {
-        res.status(400).send({ message: 'No file uploaded' });
+const uploadMiddleware = upload.single('image');
+
+router.post('/', protect, (req, res) => {
+    // 1. Check Config
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+        console.error('Cloudinary config missing');
+        return res.status(500).json({ message: 'Server configuration error: Cloudinary credentials missing' });
     }
+
+    // 2. Handle Upload
+    uploadMiddleware(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+            // A Multer error occurred when uploading.
+            console.error('Multer error:', err);
+            return res.status(400).json({ message: `Upload error: ${err.message}` });
+        } else if (err) {
+            // An unknown error occurred when uploading.
+            console.error('Unknown upload error:', err);
+            return res.status(500).json({ message: `Cloudinary error: ${err.message}` });
+        }
+
+        // Everything went fine.
+        if (req.file) {
+            res.send({
+                message: 'Image uploaded successfully',
+                location: req.file.path,
+            });
+        } else {
+            res.status(400).send({ message: 'No file uploaded' });
+        }
+    });
 });
+
 
 module.exports = router;
