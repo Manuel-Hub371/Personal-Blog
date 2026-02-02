@@ -26,9 +26,21 @@ const api = {
 
     // Helper to handle response and throw error if not OK
     handleResponse: async (res) => {
-        const data = await res.json();
+        let data;
+        const contentType = res.headers.get('content-type');
+        try {
+            if (contentType && contentType.indexOf('application/json') !== -1) {
+                data = await res.json();
+            } else {
+                data = { message: await res.text() };
+            }
+        } catch (e) {
+            data = { message: res.statusText };
+        }
+
         if (!res.ok) {
-            throw new Error(data.message || 'API request failed');
+            const errorMessage = data.message || `API request failed: ${res.status} ${res.statusText}`;
+            throw new Error(errorMessage);
         }
         return data;
     },
