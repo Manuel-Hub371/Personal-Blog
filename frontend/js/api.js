@@ -1,5 +1,6 @@
-const API_BASE_URL = 'https://personal-blog-cqk4.onrender.com/api';
-const STATIC_BASE_URL = 'https://personal-blog-cqk4.onrender.com';
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const API_BASE_URL = isLocal ? 'http://localhost:5000/api' : 'https://personal-blog-cqk4.onrender.com/api';
+const STATIC_BASE_URL = isLocal ? 'http://localhost:5000' : 'https://personal-blog-cqk4.onrender.com';
 
 const api = {
     // Helper to get headers with token if available
