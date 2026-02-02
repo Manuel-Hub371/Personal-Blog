@@ -42,13 +42,18 @@ const upload = multer({
 //          though often upload endpoints are left open or protected via token. 
 //          Since TinyMCE will call this with the token header, we should protect it in server.js mount or here.)
 //          For simplicity in this step, we'll keep it simple, but in prod we'd add `protect`.
+// Hardcoded base URL as requested
+const BASE_URL = 'https://personal-blog-cqk4.onrender.com';
 const { protect } = require('../middleware/authMiddleware');
 
 router.post('/', protect, upload.single('image'), (req, res) => {
     if (req.file) {
+        // Construct full absolute URL
+        const fullUrl = `${BASE_URL}/uploads/${req.file.filename}`;
+
         res.send({
             message: 'Image uploaded',
-            location: `/uploads/${req.file.filename}`, // URL for the frontend
+            location: fullUrl, // Returns full URL: https://.../uploads/filename.ext
         });
     } else {
         res.status(400).send({ message: 'No file uploaded' });
