@@ -603,6 +603,42 @@ textarea:focus {
     .about-text p {
         font-size: 1rem !important;
     }
+
+    /* Homepage About Section Mobile */
+    .about-preview-card {
+        flex-direction: column !important;
+        gap: 24px !important;
+        padding: 32px 20px !important;
+        align-items: center !important;
+    }
+
+    .about-preview-card img {
+        width: 140px !important;
+        height: 140px !important;
+        margin: 0 auto !important;
+    }
+
+    /* Target the text container div */
+    .about-preview-card>div {
+        text-align: left !important;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Target the button inside the text container */
+    .about-preview-card .btn {
+        margin: 24px auto 0 auto !important;
+        /* Center the button */
+        display: table !important;
+        /* Helps with centering */
+    }
+
+    .about-preview-card h2 {
+        text-align: center !important;
+        /* Optional: Center title to match image */
+        margin-bottom: 16px !important;
+    }
 }
 
 /* Tablets: 481px - 768px */
