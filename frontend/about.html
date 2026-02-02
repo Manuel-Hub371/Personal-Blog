@@ -29,32 +29,40 @@
         </div>
     </header>
 
-    <main class="container" style="padding-top: 160px;">
-        <div class="reveal about-grid">
-            <div class="about-image">
+    <main class="container" style="padding-top: 140px;">
+        <div class="reveal about-container">
+            <!-- Profile Section -->
+            <div class="profile-section">
                 <img id="profile-image"
-                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80"
-                    alt="Manuel" style="width: 100%; border-radius: 32px; box-shadow: var(--shadow-premium);">
-            </div>
-            <div class="about-text">
-                <h1 style="margin-bottom: 24px; font-size: 3rem;">Hello, I'm <span
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80"
+                    alt="Manuel" class="profile-img">
+                <h1 style="font-size: 2.5rem; margin-bottom: 8px;">Hello, I'm <span
                         style="color: var(--primary);">Manuel</span>.</h1>
-                <p id="user-bio"
-                    style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 32px; line-height: 1.6;">
+                <p style="color: var(--text-muted); font-size: 1.1rem;">Full-Stack Developer & Designer</p>
+            </div>
+
+            <!-- Bio Section -->
+            <div class="content-section">
+                <!-- <h3>Bio</h3> -->
+                <p id="user-bio">
                     Loading bio...
                 </p>
-                <div class="glass-card reveal" style="margin-bottom: 32px;">
-                    <h3>My Journey</h3>
-                    <p id="journey-text" style="color: var(--text-muted); margin-top: 16px; line-height: 1.6;">
-                        Loading journey...
-                    </p>
-                </div>
-                <div class="reveal">
-                    <h3>What I Do</h3>
-                    <ul id="skills-list" class="skill-chips">
-                        <li class="skill-chip">Loading skills...</li>
-                    </ul>
-                </div>
+            </div>
+
+            <!-- Journey Section -->
+            <div class="content-section">
+                <h3>My Journey</h3>
+                <p id="journey-text">
+                    Loading journey...
+                </p>
+            </div>
+
+            <!-- Skills Section -->
+            <div class="content-section">
+                <h3>Skills</h3>
+                <ul id="skills-list" class="skill-chips">
+                    <li class="skill-chip">Loading skills...</li>
+                </ul>
             </div>
         </div>
     </main>
