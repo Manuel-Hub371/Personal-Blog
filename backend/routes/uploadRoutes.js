@@ -37,17 +37,22 @@ const upload = multer({
     },
 });
 
-// Dynamic base URL based on request (handles localhost vs render)
-const baseUrl = `${req.protocol}://${req.get('host')}`;
-const fullUrl = `${baseUrl}/uploads/${req.file.filename}`;
+// @route   POST /api/upload
+// @desc    Upload an image
+// @access  Protected
+router.post('/', protect, upload.single('image'), (req, res) => {
+    if (req.file) {
+        // Dynamic base URL based on request (handles localhost vs render)
+        const baseUrl = `${req.protocol}://${req.get('host')}`;
+        const fullUrl = `${baseUrl}/uploads/${req.file.filename}`;
 
-res.send({
-    message: 'Image uploaded',
-    location: fullUrl,
-});
+        res.send({
+            message: 'Image uploaded',
+            location: fullUrl,
+        });
     } else {
-    res.status(400).send({ message: 'No file uploaded' });
-}
+        res.status(400).send({ message: 'No file uploaded' });
+    }
 });
 
 module.exports = router;
