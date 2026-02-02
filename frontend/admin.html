@@ -735,8 +735,7 @@
         // Load About Content
         async function loadAboutContent() {
             try {
-                const response = await fetch('/api/about');
-                const data = await response.json();
+                const data = await api.getAbout();
 
                 document.getElementById('about-bio').value = data.bio || '';
                 document.getElementById('about-journey').value = data.journey || '';
@@ -801,21 +800,9 @@
                 formData.append('image', blobInfo.blob(), blobInfo.filename());
 
                 try {
-                    const token = localStorage.getItem('adminToken');
-                    const response = await fetch('/api/upload', {
-                        method: 'POST',
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Image upload failed');
-                    }
-
-                    const json = await response.json();
-                    return json.location;
+                    const response = await api.uploadImage(blobInfo.blob());
+                    // Return full static URL for the editor
+                    return api.getStaticUrl(response.location);
                 } catch (error) {
                     console.error('Image upload error:', error);
                     throw new Error('Image upload failed');

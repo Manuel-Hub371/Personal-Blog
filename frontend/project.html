@@ -164,6 +164,15 @@
 
                 if (typeof lucide !== 'undefined') lucide.createIcons();
 
+                // Fix image paths in content
+                const contentImages = container.querySelectorAll('.content-html img');
+                contentImages.forEach(img => {
+                    const src = img.getAttribute('src');
+                    if (src && !src.startsWith('http')) {
+                        img.src = api.getStaticUrl(src);
+                    }
+                });
+
             } catch (error) {
                 container.innerHTML = '<p>Error loading project. <a href="projects.html">Return to list</a></p>';
             }

@@ -128,6 +128,15 @@
                 `;
                 document.head.appendChild(style);
 
+                // Fix image paths in content
+                const contentImages = postView.querySelectorAll('.content-html img');
+                contentImages.forEach(img => {
+                    const src = img.getAttribute('src');
+                    if (src && !src.startsWith('http')) {
+                        img.src = api.getStaticUrl(src);
+                    }
+                });
+
                 document.title = `${post.title} | Manuel`;
             } catch (error) {
                 postView.innerHTML = '<p>Error loading story details.</p>';
