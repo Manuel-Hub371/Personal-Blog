@@ -13,7 +13,7 @@ dotenv.config();
 // Database connection handled in start function
 
 const app = express();
-const app = express();
+
 
 // Admin Seeding Logic
 const seedAdmin = async () => {
