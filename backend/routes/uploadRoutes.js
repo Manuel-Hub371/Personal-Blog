@@ -1,54 +1,31 @@
 const express = require('express');
 const multer = require('multer');
-const path = require('path');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinary');
 const { protect } = require('../middleware/authMiddleware');
 const router = express.Router();
 
-// Configure Local Storage
-const storage = multer.diskStorage({
-    destination(req, file, cb) {
-        cb(null, 'uploads/');
-    },
-    filename(req, file, cb) {
-        cb(
-            null,
-            `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-        );
+// Configure Cloudinary Storage
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'blog-uploads', // Folder name in Cloudinary
+        allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+        // transformation: [{ width: 500, height: 500, crop: 'limit' }] // Optional
     },
 });
 
-// Check file type
-function checkFileType(file, cb) {
-    const filetypes = /jpg|jpeg|png|webp|gif/;
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
-
-    if (extname && mimetype) {
-        return cb(null, true);
-    } else {
-        cb('Images only!');
-    }
-}
-
-const upload = multer({
-    storage,
-    fileFilter: function (req, file, cb) {
-        checkFileType(file, cb);
-    },
-});
+const upload = multer({ storage: storage });
 
 // @route   POST /api/upload
 // @desc    Upload an image
 // @access  Protected
 router.post('/', protect, upload.single('image'), (req, res) => {
     if (req.file) {
-        // Dynamic base URL based on request (handles localhost vs render)
-        const baseUrl = `${req.protocol}://${req.get('host')}`;
-        const fullUrl = `${baseUrl}/uploads/${req.file.filename}`;
-
+        // req.file.path contains the secure_url from Cloudinary
         res.send({
-            message: 'Image uploaded',
-            location: fullUrl,
+            message: 'Image uploaded successfully',
+            location: req.file.path,
         });
     } else {
         res.status(400).send({ message: 'No file uploaded' });
