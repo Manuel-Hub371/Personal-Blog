@@ -1,4 +1,4 @@
-const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
 const API_BASE_URL = isLocal ? 'http://localhost:5000/api' : 'https://personal-blog-cqk4.onrender.com/api';
 const STATIC_BASE_URL = isLocal ? 'http://localhost:5000' : 'https://personal-blog-cqk4.onrender.com';
 
