@@ -13,13 +13,7 @@ dotenv.config();
 // Database connection handled in start function
 
 const app = express();
-const fs = require('fs');
-
-// Ensure uploads directory exists
-const uploadDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-}
+const app = express();
 
 // Admin Seeding Logic
 const seedAdmin = async () => {
@@ -56,8 +50,6 @@ app.use('/api/upload', require('./routes/uploadRoutes'));
 
 // Serve static assets from frontend
 app.use(express.static(path.join(__dirname, '../frontend')));
-// Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 
 
 // Fallback for non-API routes to serve index.html
