@@ -71,7 +71,7 @@ app.use((err, req, res, next) => {
     res.status(statusCode);
     res.json({
         message: err.message,
-        stack: err.stack, // Return stack even in prod for debugging
+        stack: process.env.NODE_ENV === 'production' ? null : err.stack,
     });
 });
 
