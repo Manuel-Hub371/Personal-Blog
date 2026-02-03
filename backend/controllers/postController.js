@@ -15,45 +15,9 @@ exports.getPosts = async (req, res) => {
 // @route   GET /api/posts/:id
 exports.getPostById = async (req, res) => {
     try {
-        const post = await BlogPost.findById(req.params.id).populate('relatedPosts', 'title coverImage tags createdAt');
-
+        const post = await BlogPost.findById(req.params.id);
         if (post) {
-            let related = post.relatedPosts || [];
-
-            // Dynamic suggestions if we don't have enough manual ones
-            if (related.length < 3 && post.tags && post.tags.length > 0) {
-                const excludeIds = [post._id, ...related.map(p => p._id)];
-
-                const limit = 3 - related.length;
-                const dynamic = await BlogPost.find({
-                    _id: { $nin: excludeIds },
-                    tags: { $in: post.tags }
-                })
-                    .select('title coverImage tags createdAt')
-                    .limit(limit);
-
-                related = [...related, ...dynamic];
-            }
-
-            // If still less than 3, just fill with recent posts
-            if (related.length < 3) {
-                const excludeIds = [post._id, ...related.map(p => p._id)];
-                const limit = 3 - related.length;
-                const recent = await BlogPost.find({
-                    _id: { $nin: excludeIds }
-                })
-                    .select('title coverImage tags createdAt')
-                    .sort({ createdAt: -1 })
-                    .limit(limit);
-
-                related = [...related, ...recent];
-            }
-
-            // Convert to object to attach extra property without Mongoose restrictions
-            const postObj = post.toObject();
-            postObj.related = related;
-
-            res.json(postObj);
+            res.json(post);
         } else {
             res.status(404).json({ message: 'Post not found' });
         }
@@ -65,7 +29,7 @@ exports.getPostById = async (req, res) => {
 // @desc    Create new post
 // @route   POST /api/posts
 exports.createPost = async (req, res) => {
-    const { title, content, coverImage, tags, relatedPosts, seoTitle, seoDescription, seoKeywords } = req.body;
+    const { title, content, coverImage, tags, seoTitle, seoDescription, seoKeywords } = req.body;
 
     // Auto-generate SEO metadata if not provided
     const generatedSeoTitle = seoTitle || title;
@@ -87,7 +51,6 @@ exports.createPost = async (req, res) => {
         content,
         coverImage,
         tags,
-        relatedPosts: relatedPosts || [],
         seoTitle: generatedSeoTitle,
         seoDescription: generatedSeoDescription,
         seoKeywords: generatedSeoKeywords
@@ -111,10 +74,6 @@ exports.updatePost = async (req, res) => {
             post.content = req.body.content || post.content;
             post.coverImage = req.body.coverImage || post.coverImage;
             post.tags = req.body.tags || post.tags;
-
-            if (req.body.relatedPosts) {
-                post.relatedPosts = req.body.relatedPosts;
-            }
 
             // SEO Fields
             post.seoTitle = req.body.seoTitle || post.seoTitle;

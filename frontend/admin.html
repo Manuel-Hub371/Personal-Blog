@@ -258,27 +258,6 @@
                             <input type="text" id="tags" placeholder="tech, design, growth">
                         </div>
 
-                        <!-- RELATED POSTS SELECTION -->
-                        <div class="form-group" style="margin-top: 24px;">
-                            <label>Related Stories (Select up to 3 manually)</label>
-                            <div
-                                style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 12px; padding: 16px;">
-                                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
-                                    <select id="related-posts-select" class="form-control" style="flex: 1;">
-                                        <option value="">Select a story to link...</option>
-                                    </select>
-                                    <button type="button" id="add-related-btn" class="btn btn-outline"
-                                        style="padding: 0 16px;">Add</button>
-                                </div>
-                                <div id="selected-related-container"
-                                    style="display: flex; flex-direction: column; gap: 8px;">
-                                    <!-- Selected items will appear here -->
-                                    <p class="text-muted" style="font-size: 0.85rem; font-style: italic;">No manual
-                                        links. Dynamic suggestions will be used.</p>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- SEO SETTINGS -->
                         <div style="margin-top: 32px; margin-bottom: 24px;">
                             <h4
@@ -702,66 +681,6 @@
         const pList = document.getElementById('admin-project-list');
         const pwForm = document.getElementById('password-form');
 
-        let allPostsCache = []; // extensive cache for related posts selection
-        let selectedRelatedPosts = []; // Current editing state
-
-        // Initialize Related Posts Logic
-        const relatedSelect = document.getElementById('related-posts-select');
-        const addRelatedBtn = document.getElementById('add-related-btn');
-        const selectedContainer = document.getElementById('selected-related-container');
-
-        addRelatedBtn.addEventListener('click', () => {
-            const id = relatedSelect.value;
-            if (!id) return;
-
-            // Prevent duplicates
-            if (selectedRelatedPosts.some(p => p._id === id)) return;
-            // Prevent self-linking (handled in render but good to have safety)
-            const currentEditingId = document.getElementById('post-id').value;
-            if (id === currentEditingId) {
-                alert("Cannot link a story to itself.");
-                return;
-            }
-
-            const post = allPostsCache.find(p => p._id === id);
-            if (post) {
-                selectedRelatedPosts.push(post);
-                renderSelectedRelated();
-                relatedSelect.value = ''; // Reset dropdown
-            }
-        });
-
-        function renderSelectedRelated() {
-            if (selectedRelatedPosts.length === 0) {
-                selectedContainer.innerHTML = '<p class="text-muted" style="font-size: 0.85rem; font-style: italic;">No manual links. Dynamic suggestions will be used.</p>';
-                return;
-            }
-
-            selectedContainer.innerHTML = selectedRelatedPosts.map(p => `
-                <div class="glass-card" style="padding: 8px 12px; display: flex; align-items: center; justify-content: space-between;">
-                    <span style="font-size: 0.9rem;">${p.title}</span>
-                    <button type="button" onclick="removeRelated('${p._id}')" style="background: none; border: none; color: #ef4444; cursor: pointer;">&times;</button>
-                </div>
-            `).join('');
-        }
-
-        window.removeRelated = (id) => {
-            selectedRelatedPosts = selectedRelatedPosts.filter(p => p._id !== id);
-            renderSelectedRelated();
-        };
-
-        function updateRelatedDropdown(excludeId) {
-            relatedSelect.innerHTML = '<option value="">Select a story to link...</option>';
-            allPostsCache.forEach(p => {
-                if (p._id !== excludeId) {
-                    const option = document.createElement('option');
-                    option.value = p._id;
-                    option.textContent = p.title;
-                    relatedSelect.appendChild(option);
-                }
-            });
-        }
-
         async function loadContent() {
             try {
                 // Show loading states
@@ -773,8 +692,6 @@
                 // though api.getPosts() uses fetch which usually hits network. 
                 // We'll trust the API but ensure UI updates.
                 const posts = await api.getPosts();
-                allPostsCache = posts; // Update cache
-                updateRelatedDropdown(null); // Initial populate
                 postList.innerHTML = '';
 
                 if (posts.length === 0) {
@@ -936,12 +853,12 @@
             const data = {
                 title: document.getElementById('title').value,
                 content: content,
+                content: content,
                 coverImage: document.getElementById('coverImage').value,
                 tags: document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t !== ''),
                 seoTitle: document.getElementById('seoTitle').value,
                 seoDescription: document.getElementById('seoDescription').value,
-                seoKeywords: document.getElementById('seoKeywords').value,
-                relatedPosts: selectedRelatedPosts.map(p => p._id) // Add related posts
+                seoKeywords: document.getElementById('seoKeywords').value
             };
             try {
                 if (id) {
@@ -956,11 +873,6 @@
                 document.getElementById('post-id').value = '';
                 document.getElementById('cancel-edit').style.display = 'none';
                 document.getElementById('form-title').textContent = 'Add Post';
-
-                // Reset Related
-                selectedRelatedPosts = [];
-                renderSelectedRelated();
-                updateRelatedDropdown(null);
 
                 // Refresh list
                 await loadContent();
@@ -983,7 +895,7 @@
                 const preview = document.getElementById('post-image-preview');
                 if (post.coverImage) {
                     preview.style.display = 'block';
-                    preview.style.backgroundImage = `url('${api.getStaticUrl(post.coverImage)}')`;
+                    preview.style.backgroundImage = `url('${post.coverImage}')`;
                 } else {
                     preview.style.display = 'none';
                 }
@@ -994,19 +906,6 @@
                 document.getElementById('seoTitle').value = post.seoTitle || '';
                 document.getElementById('seoDescription').value = post.seoDescription || '';
                 document.getElementById('seoKeywords').value = post.seoKeywords || '';
-
-                // Populate Related Posts
-                selectedRelatedPosts = [];
-                if (post.relatedPosts) {
-                    post.relatedPosts.forEach(rp => {
-                        // rp could be object or id depending on population
-                        const rpObj = (typeof rp === 'object') ? rp : allPostsCache.find(c => c._id === rp);
-                        if (rpObj) selectedRelatedPosts.push(rpObj);
-                    });
-                }
-                renderSelectedRelated();
-                updateRelatedDropdown(post._id);
-
                 document.getElementById('form-title').textContent = 'Modify Story';
                 document.getElementById('cancel-edit').style.display = 'block';
                 // Scroll to top of form container
@@ -1115,16 +1014,9 @@
 
         document.getElementById('cancel-edit').onclick = () => {
             postForm.reset();
-            tinymce.get('content').setContent('');
-            document.getElementById('post-image-preview').style.display = 'none';
             document.getElementById('post-id').value = '';
             document.getElementById('cancel-edit').style.display = 'none';
             document.getElementById('form-title').textContent = 'Add Post';
-
-            // Reset Related
-            selectedRelatedPosts = [];
-            renderSelectedRelated();
-            updateRelatedDropdown(null);
         };
 
         document.getElementById('cancel-p-edit').onclick = () => {
