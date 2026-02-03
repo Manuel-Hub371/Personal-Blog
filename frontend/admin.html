@@ -257,6 +257,26 @@
                             <label for="tags">Categorize (Comma separated)</label>
                             <input type="text" id="tags" placeholder="tech, design, growth">
                         </div>
+
+                        <!-- SEO SETTINGS -->
+                        <div style="margin-top: 32px; margin-bottom: 24px;">
+                            <h4
+                                style="margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 8px;">
+                                SEO Settings (Optional)</h4>
+                            <div class="form-group">
+                                <label for="seoTitle">SEO Title (defaults to post title)</label>
+                                <input type="text" id="seoTitle" placeholder="Custom title for search engines">
+                            </div>
+                            <div class="form-group">
+                                <label for="seoDescription">SEO Description (defaults to auto-generated)</label>
+                                <textarea id="seoDescription" rows="3"
+                                    placeholder="Summary for search results..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="seoKeywords">SEO Keywords (defaults to tags)</label>
+                                <input type="text" id="seoKeywords" placeholder="keyword1, keyword2, keyword3">
+                            </div>
+                        </div>
                         <div style="display: flex; gap: 12px;">
                             <button type="submit" class="btn btn-primary">Save Story</button>
                             <button type="button" onclick="toggleForm('admin-post-form-container')" id="cancel-edit"
@@ -833,8 +853,12 @@
             const data = {
                 title: document.getElementById('title').value,
                 content: content,
+                content: content,
                 coverImage: document.getElementById('coverImage').value,
-                tags: document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t !== '')
+                tags: document.getElementById('tags').value.split(',').map(t => t.trim()).filter(t => t !== ''),
+                seoTitle: document.getElementById('seoTitle').value,
+                seoDescription: document.getElementById('seoDescription').value,
+                seoKeywords: document.getElementById('seoKeywords').value
             };
             try {
                 if (id) {
@@ -877,6 +901,11 @@
                 }
 
                 document.getElementById('tags').value = (post.tags || []).join(', ');
+
+                // Populate SEO
+                document.getElementById('seoTitle').value = post.seoTitle || '';
+                document.getElementById('seoDescription').value = post.seoDescription || '';
+                document.getElementById('seoKeywords').value = post.seoKeywords || '';
                 document.getElementById('form-title').textContent = 'Modify Story';
                 document.getElementById('cancel-edit').style.display = 'block';
                 // Scroll to top of form container

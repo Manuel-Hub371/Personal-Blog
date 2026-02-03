@@ -5,6 +5,9 @@ const blogPostSchema = new mongoose.Schema({
     content: { type: String, required: true },
     coverImage: { type: String },
     tags: [{ type: String }],
+    seoTitle: { type: String },
+    seoDescription: { type: String },
+    seoKeywords: { type: String },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 }, { timestamps: true });

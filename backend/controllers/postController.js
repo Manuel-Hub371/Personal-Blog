@@ -29,11 +29,31 @@ exports.getPostById = async (req, res) => {
 // @desc    Create new post
 // @route   POST /api/posts
 exports.createPost = async (req, res) => {
+    const { title, content, coverImage, tags, seoTitle, seoDescription, seoKeywords } = req.body;
+
+    // Auto-generate SEO metadata if not provided
+    const generatedSeoTitle = seoTitle || title;
+
+    let generatedSeoDescription = seoDescription;
+    if (!generatedSeoDescription && content) {
+        // Strip HTML/Markdown - simple heuristic: remove special chars or just take substring
+        // For simplicity, just taking raw substring and cleaning up a bit
+        generatedSeoDescription = content.substring(0, 150).replace(/[#*`]/g, '').trim() + '...';
+    }
+
+    let generatedSeoKeywords = seoKeywords;
+    if (!generatedSeoKeywords && tags && Array.isArray(tags)) {
+        generatedSeoKeywords = tags.join(', ');
+    }
+
     const post = new BlogPost({
-        title: req.body.title,
-        content: req.body.content,
-        coverImage: req.body.coverImage,
-        tags: req.body.tags
+        title,
+        content,
+        coverImage,
+        tags,
+        seoTitle: generatedSeoTitle,
+        seoDescription: generatedSeoDescription,
+        seoKeywords: generatedSeoKeywords
     });
 
     try {
@@ -54,6 +74,12 @@ exports.updatePost = async (req, res) => {
             post.content = req.body.content || post.content;
             post.coverImage = req.body.coverImage || post.coverImage;
             post.tags = req.body.tags || post.tags;
+
+            // SEO Fields
+            post.seoTitle = req.body.seoTitle || post.seoTitle;
+            post.seoDescription = req.body.seoDescription || post.seoDescription;
+            post.seoKeywords = req.body.seoKeywords || post.seoKeywords;
+
             post.updatedAt = Date.now();
 
             const updatedPost = await post.save();

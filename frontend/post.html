@@ -172,7 +172,24 @@
                     }
                 });
 
-                document.title = `${post.title} | Manuel`;
+                document.title = `${post.seoTitle || post.title} | Manuel`;
+
+                // SEO Meta Tags
+                let metaDesc = document.querySelector('meta[name="description"]');
+                if (!metaDesc) {
+                    metaDesc = document.createElement('meta');
+                    metaDesc.name = 'description';
+                    document.head.appendChild(metaDesc);
+                }
+                metaDesc.content = post.seoDescription || '';
+
+                let metaKeywords = document.querySelector('meta[name="keywords"]');
+                if (!metaKeywords) {
+                    metaKeywords = document.createElement('meta');
+                    metaKeywords.name = 'keywords';
+                    document.head.appendChild(metaKeywords);
+                }
+                metaKeywords.content = post.seoKeywords || '';
             } catch (error) {
                 postView.innerHTML = '<p>Error loading story details.</p>';
             }
