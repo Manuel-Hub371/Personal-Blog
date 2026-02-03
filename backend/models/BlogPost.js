@@ -8,6 +8,7 @@ const blogPostSchema = new mongoose.Schema({
     seoTitle: { type: String },
     seoDescription: { type: String },
     seoKeywords: { type: String },
+    relatedPosts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'BlogPost' }],
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now }
 }, { timestamps: true });
