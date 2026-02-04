@@ -8,29 +8,7 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        .post-header {
-            margin-bottom: 48px;
-            text-align: center;
-        }
-
-        .post-cover {
-            width: 100%;
-            height: 500px;
-            object-fit: cover;
-            border-radius: 32px;
-            margin-bottom: 40px;
-            box-shadow: var(--shadow-premium);
-        }
-
-        .post-body {
-            font-size: 1.15rem;
-            color: var(--text-main);
-            line-height: 1.8;
-        }
-
-        .post-body p {
-            margin-bottom: 24px;
-        }
+        /* Inline styles removed in favor of style.css */
     </style>
 </head>
 
@@ -54,7 +32,7 @@
         </div>
     </header>
 
-    <main class="container" style="padding-top: 160px; max-width: 800px;">
+    <main class="container article-container">
         <div id="post-view">
             <p>Gathering thoughts...</p>
         </div>
@@ -62,40 +40,32 @@
 
     <footer>
         <div class="container reveal">
-            <div class="footer-grid"
-                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; text-align: left;">
-                <div>
-                    <h4 style="color: var(--primary); margin-bottom: 20px;">Manuel-HUB</h4>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">Crafting digital
-                        experiences with passion and precision. Exploring the intersection of design and code.</p>
+            <div class="footer-grid-styled">
+                <div class="footer-column">
+                    <h4>Manuel-HUB</h4>
+                    <p>Crafting digital experiences with passion and precision. Exploring the intersection of design and
+                        code.</p>
                 </div>
-                <div>
-                    <h4 style="color: var(--primary); margin-bottom: 20px;">Quick Links</h4>
-                    <ul style="list-style: none;">
-                        <li style="margin-bottom: 10px;"><a href="index.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">Home</a></li>
-                        <li style="margin-bottom: 10px;"><a href="about.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">About</a></li>
-                        <li style="margin-bottom: 10px;"><a href="blog.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">Blog</a></li>
-                        <li><a href="contact.html" style="color: var(--text-muted); font-size: 0.9rem;">Contact</a></li>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h4 style="color: var(--primary); margin-bottom: 20px;">Legal</h4>
-                    <ul style="list-style: none;">
-                        <li style="margin-bottom: 10px;"><a href="privacy.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">Privacy Policy</a></li>
-                        <li style="margin-bottom: 10px;"><a href="terms.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">Terms & Conditions</a></li>
-                        <li><a href="disclaimer.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">Disclaimer</a></li>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms & Conditions</a></li>
+                        <li><a href="disclaimer.html">Disclaimer</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div
-                style="border-top: 1px solid var(--border-glass); padding-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+            <div class="footer-bottom">
                 <div class="socials">
                     <a href="https://wa.me/0549820094" target="_blank" aria-label="WhatsApp"><i
                             data-lucide="phone"></i></a>
@@ -135,11 +105,11 @@
 
                 postView.innerHTML = `
                     <article class="reveal active">
-                        <header class="post-header" style="position: relative;">
+                        <header class="post-header">
                             <span class="card-tag">Published ${formatDate(post.createdAt)}</span>
-                            <h1 style="font-size: 3.5rem; line-height: 1.2; margin-bottom: 24px;">${post.title}</h1>
-                            ${post.tags.length ? `<div style="display: flex; gap: 8px; justify-content: center; margin-bottom: 40px;">
-                                ${post.tags.map(t => `<span style="font-size: 0.75rem; background: var(--border-glass); padding: 4px 12px; border-radius: 20px;">${t}</span>`).join('')}
+                            <h1 class="post-title">${post.title}</h1>
+                            ${post.tags.length ? `<div class="post-tags">
+                                ${post.tags.map(t => `<span class="post-tag">${t}</span>`).join('')}
                             </div>` : ''}
                         </header>
                         
@@ -151,17 +121,7 @@
                     </article>
                 `;
 
-                // Add styles for the content
-                const style = document.createElement('style');
-                style.innerHTML = `
-                    .content-html img { max-width: 100%; height: auto; border-radius: 8px; margin: 20px 0; }
-                    .content-html table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-                    .content-html th, .content-html td { border: 1px solid var(--border-glass); padding: 8px; }
-                    .content-html ul, .content-html ol { margin-left: 20px; margin-bottom: 20px; }
-                    .content-html h2 { margin-top: 32px; margin-bottom: 16px; color: var(--primary); }
-                    .content-html a { color: var(--primary); text-decoration: underline; }
-                `;
-                document.head.appendChild(style);
+                // Content style injection removed - handled by style.css
 
                 // Fix image paths in content
                 const contentImages = postView.querySelectorAll('.content-html img');
