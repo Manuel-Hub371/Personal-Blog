@@ -7,74 +7,6 @@
     <title>Project Details | Manuel</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        .project-meta {
-            margin: 24px 0 40px;
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .meta-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .meta-label {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .meta-value {
-            font-weight: 500;
-        }
-
-        .tech-tags {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .tech-tag {
-            font-size: 0.8rem;
-            background: var(--border-glass);
-            padding: 4px 12px;
-            border-radius: 20px;
-        }
-
-        .project-links {
-            display: flex;
-            gap: 16px;
-            margin-top: 32px;
-        }
-
-        .content-html {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: var(--text-main);
-        }
-
-        .content-html p {
-            margin-bottom: 24px;
-        }
-
-        .content-html h2 {
-            margin: 40px 0 20px;
-            font-size: 1.8rem;
-        }
-
-        .content-html ul {
-            margin-bottom: 24px;
-            padding-left: 20px;
-        }
-
-        .content-html li {
-            margin-bottom: 8px;
-        }
-    </style>
 </head>
 
 <body>
@@ -97,48 +29,40 @@
         </div>
     </header>
 
-    <main class="container" style="padding-top: 140px; max-width: 800px;">
-        <article id="project-content" class="reveal">
+    <main class="container project-detail-main">
+        <article id="project-content" class="project-detail-card reveal">
             <p>Loading project details...</p>
         </article>
     </main>
 
     <footer>
         <div class="container reveal">
-            <div class="footer-grid"
-                style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; margin-bottom: 40px; text-align: left;">
-                <div>
-                    <h4 style="color: var(--primary); margin-bottom: 20px;">Manuel-HUB</h4>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">Crafting digital
-                        experiences with passion and precision. Exploring the intersection of design and code.</p>
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h4>Manuel-HUB</h4>
+                    <p>Crafting digital experiences with passion and precision. Exploring the intersection of design and
+                        code.</p>
                 </div>
-                <div>
-                    <h4 style="color: var(--primary); margin-bottom: 20px;">Quick Links</h4>
-                    <ul style="list-style: none;">
-                        <li style="margin-bottom: 10px;"><a href="index.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">Home</a></li>
-                        <li style="margin-bottom: 10px;"><a href="about.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">About</a></li>
-                        <li style="margin-bottom: 10px;"><a href="blog.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">Blog</a></li>
-                        <li><a href="contact.html" style="color: var(--text-muted); font-size: 0.9rem;">Contact</a></li>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
-                <div>
-                    <h4 style="color: var(--primary); margin-bottom: 20px;">Legal</h4>
-                    <ul style="list-style: none;">
-                        <li style="margin-bottom: 10px;"><a href="privacy.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">Privacy Policy</a></li>
-                        <li style="margin-bottom: 10px;"><a href="terms.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">Terms & Conditions</a></li>
-                        <li><a href="disclaimer.html"
-                                style="color: var(--text-muted); font-size: 0.9rem;">Disclaimer</a></li>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <ul class="footer-links">
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms & Conditions</a></li>
+                        <li><a href="disclaimer.html">Disclaimer</a></li>
                     </ul>
                 </div>
             </div>
 
-            <div
-                style="border-top: 1px solid var(--border-glass); padding-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 20px;">
+            <div class="footer-bottom">
                 <div class="socials">
                     <a href="https://wa.me/0549820094" target="_blank" aria-label="WhatsApp"><i
                             data-lucide="phone"></i></a>
@@ -151,7 +75,7 @@
                     <a href="https://github.com/Manuel-Hub371" target="_blank" aria-label="GitHub"><i
                             data-lucide="github"></i></a>
                 </div>
-                <p style="color: var(--text-muted); font-size: 0.9rem;">&copy; 2026 Manuel. All rights reserved.</p>
+                <p>&copy; 2026 Manuel. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -174,12 +98,12 @@
                 document.title = `${project.title} | Manuel Projects`;
 
                 container.innerHTML = `
-                    <a href="projects.html" style="display: inline-flex; align-items: center; gap: 8px; color: var(--text-muted); text-decoration: none; margin-bottom: 32px;">
-                        <i data-lucide="arrow-left" style="width: 16px;"></i> Back to Projects
+                    <a href="projects.html" class="project-back-link">
+                        <i data-lucide="arrow-left"></i> Back to Projects
                     </a>
                     
-                    <h1 style="font-size: 3rem; line-height: 1.1; margin-bottom: 24px;">${project.title}</h1>
-                    <p style="font-size: 1.25rem; color: var(--text-muted); border-left: 4px solid var(--primary); padding-left: 16px;">${project.description}</p>
+                    <h1 class="project-title">${project.title}</h1>
+                    <p class="project-description">${project.description}</p>
                     
                     <div class="project-meta">
                         <div class="meta-item">
@@ -194,17 +118,19 @@
                         </div>
                     </div>
 
-                    <img src="${api.getStaticUrl(project.image) || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c'}" 
-                         style="width: 100%; height: auto; border-radius: 12px; margin-bottom: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);" 
-                         alt="${project.title}">
+                    <div class="project-image-container">
+                        <img src="${api.getStaticUrl(project.image) || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c'}" 
+                             class="project-main-image"
+                             alt="${project.title}">
+                    </div>
 
-                    <div class="content-html">
+                    <div class="project-content content-html">
                         ${project.content || '<p>No detailed content available for this project.</p>'}
                     </div>
 
-                    <div class="project-links">
-                        ${project.link ? `<a href="${project.link}" target="_blank" class="btn btn-primary">View Live Demo <i data-lucide="external-link" style="width: 16px; margin-left: 8px;"></i></a>` : ''}
-                        ${project.githubLink ? `<a href="${project.githubLink}" target="_blank" class="btn btn-outline">View on GitHub <i data-lucide="github" style="width: 16px; margin-left: 8px;"></i></a>` : ''}
+                    <div class="project-actions">
+                        ${project.link ? `<a href="${project.link}" target="_blank" class="btn btn-primary">View Live Demo <i data-lucide="external-link"></i></a>` : ''}
+                        ${project.githubLink ? `<a href="${project.githubLink}" target="_blank" class="btn btn-outline">View on GitHub <i data-lucide="github"></i></a>` : ''}
                     </div>
                 `;
 
@@ -214,13 +140,14 @@
                 const contentImages = container.querySelectorAll('.content-html img');
                 contentImages.forEach(img => {
                     const src = img.getAttribute('src');
+                    img.classList.add('project-content-image');
                     if (src && !src.startsWith('http')) {
                         img.src = api.getStaticUrl(src);
                     }
                 });
 
             } catch (error) {
-                container.innerHTML = '<p>Error loading project. <a href="projects.html">Return to list</a></p>';
+                container.innerHTML = '<p class="error-msg">Error loading project. <a href="projects.html">Return to list</a></p>';
             }
         });
     </script>
