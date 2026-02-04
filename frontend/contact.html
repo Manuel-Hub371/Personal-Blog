@@ -29,42 +29,43 @@
         </div>
     </header>
 
-    <main class="container" style="padding-top: 160px; max-width: 600px;">
+    <main class="container contact-main">
         <div class="reveal">
-            <h1 style="font-size: 3.5rem; margin-bottom: 16px; text-align: center;">Let's <span
-                    style="color: var(--primary);">Connect</span></h1>
-            <p style="color: var(--text-muted); text-align: center; font-size: 1.15rem; margin-bottom: 48px;">Have a
-                project in mind or just want to say hi? I'd love to hear from you.</p>
+            <div class="contact-header">
+                <h1>Let's <span style="color: var(--primary);">Connect</span></h1>
+                <p>Have a project in mind or just want to say hi? I'd love to hear from you.</p>
+            </div>
 
-            <form id="contact-form" class="glass-card">
+            <form id="contact-form" class="contact-form-card">
                 <div class="form-group">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Name</label>
+                    <label for="name">Name</label>
                     <input type="text" id="name" required placeholder="Jane Doe">
                 </div>
                 <div class="form-group">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Email Address</label>
+                    <label for="email">Email Address</label>
                     <input type="email" id="email" required placeholder="jane@example.com">
                 </div>
                 <div class="form-group">
-                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Your Message</label>
+                    <label for="message">Your Message</label>
                     <textarea id="message" rows="6" required placeholder="How can I help you?"></textarea>
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">Send
-                    Message</button>
-                <div id="form-status"
-                    style="margin-top: 24px; text-align: center; border-radius: 12px; padding: 12px; display: none;">
-                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+                <div id="form-status" style="display: none;"></div>
             </form>
 
-            <div class="reveal" style="margin-top: 64px; text-align: center;">
+            <div class="reveal contact-socials-section">
                 <p style="color: var(--text-muted); margin-bottom: 24px;">Or reach me directly on</p>
-                <div class="socials" style="display: flex; justify-content: center; font-size: 1.5rem; gap: 40px;">
-                    <a href="https://wa.me/0549820094" target="_blank" style="color: #25D366;" aria-label="WhatsApp"><i
-                            data-lucide="phone"></i></a>
-                    <a href="https://instagram.com/_niqg.theace_" target="_blank" style="color: #E1306C;"
+                <div class="contact-socials-grid">
+                    <a href="https://wa.me/0549820094" target="_blank" class="contact-social-link whatsapp"
+                        aria-label="WhatsApp"><i data-lucide="phone"></i></a>
+                    <a href="https://instagram.com/_niqg.theace_" target="_blank" class="contact-social-link instagram"
                         aria-label="Instagram"><i data-lucide="instagram"></i></a>
-                    <a href="https://facebook.com/yourusername" target="_blank" style="color: #1877F2;"
+                    <a href="https://facebook.com/yourusername" target="_blank" class="contact-social-link facebook"
                         aria-label="Facebook"><i data-lucide="facebook"></i></a>
+                    <a href="https://twitter.com/yourusername" target="_blank" class="contact-social-link twitter"
+                        aria-label="Twitter"><i data-lucide="twitter"></i></a>
+                    <a href="https://github.com/Manuel-Hub371" target="_blank" class="contact-social-link github"
+                        aria-label="GitHub"><i data-lucide="github"></i></a>
                 </div>
             </div>
         </div>
