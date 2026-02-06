@@ -644,34 +644,115 @@
             window.location.href = 'login.html';
         });
 
-        // --- Image Upload Logic ---
+        // --- Image Upload Logic (Optimized) ---
         async function handleImageUpload(input, hiddenInputId, previewId) {
             const file = input.files[0];
             if (!file) return;
 
+            // 1. Immediate Validation: File Size Limit (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                alert("File is too large! Please select an image under 5MB.");
+                input.value = ''; // Reset
+                return;
+            }
+
             const hiddenInput = document.getElementById(hiddenInputId);
             const preview = document.getElementById(previewId);
 
-            // Show loading state (optional: turn preview opacity down or show spinner)
-            preview.style.opacity = '0.5';
+            // 2. Client-side Preview (Immediate)
+            const objectUrl = URL.createObjectURL(file);
+            preview.style.backgroundImage = `url('${objectUrl}')`;
+            preview.style.display = 'block';
+
+            // Show loading state
+            preview.classList.add('loading');
 
             try {
-                const res = await api.uploadImage(file);
-                // Success
+                // 3. Client-side Compression
+                const compressedFile = await compressImage(file, {
+                    maxWidth: 1200,
+                    quality: 0.8
+                });
+
+                // 4. Background Upload
+                const res = await api.uploadImage(compressedFile);
+
+                // Success: Update hidden input
                 hiddenInput.value = res.location;
-                preview.style.backgroundImage = `url('${api.getStaticUrl(res.location)}')`;
-                preview.style.display = 'block';
+
+                // Update preview with server URL (optional, keeps it synced)
+                // We keep the local objectUrl for now as it's already loaded
+                // preview.style.backgroundImage = `url('${api.getStaticUrl(res.location)}')`;
+
             } catch (error) {
                 console.error("Upload failed", error);
                 alert("Failed to upload image: " + error.message);
+
+                // Reset preview on failure
+                preview.style.backgroundImage = '';
+                preview.style.display = 'none';
+                input.value = '';
+
                 if (error.message.includes('authorized') || error.message.includes('token')) {
                     api.logout();
                     window.location.href = 'login.html';
                 }
             } finally {
-                preview.style.opacity = '1';
-                input.value = ''; // Reset file input so same file can be selected again if needed
+                // Remove loading state
+                preview.classList.remove('loading');
+                // Clean up object URL to avoid memory leaks (optional, browser handles it mostly)
+                // URL.revokeObjectURL(objectUrl); 
             }
+        }
+
+        // Image Compression Utility
+        function compressImage(file, options = {}) {
+            return new Promise((resolve, reject) => {
+                const { maxWidth = 1200, quality = 0.8 } = options;
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+
+                        // Calculate new dimensions
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Convert to Blob
+                        canvas.toBlob((blob) => {
+                            if (!blob) {
+                                reject(new Error('Canvas to Blob conversion failed'));
+                                return;
+                            }
+                            // Create a new File object
+                            const newFile = new File([blob], file.name, {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            });
+                            resolve(newFile);
+                        }, 'image/jpeg', quality);
+                    };
+
+                    img.onerror = (err) => reject(err);
+                };
+
+                reader.onerror = (err) => reject(err);
+                reader.readAsDataURL(file);
+            });
         }
 
         // --- Content Management ---
