@@ -36,7 +36,17 @@
         <div id="post-view">
             <p>Gathering thoughts...</p>
         </div>
+
     </main>
+
+    <div class="container" style="padding-bottom: 80px;">
+        <div id="related-posts-section" style="display: none; margin-top: 40px;">
+            <h2 class="section-title">Values & Related Stories</h2>
+            <div id="related-posts-container" class="card-grid">
+                <!-- Related posts will be injected here -->
+            </div>
+        </div>
+    </div>
 
     <footer>
         <div class="container reveal">
@@ -69,12 +79,7 @@
                 <div class="socials">
                     <a href="https://wa.me/0549820094" target="_blank" aria-label="WhatsApp"><i
                             data-lucide="phone"></i></a>
-                    <a href="https://instagram.com/_niqg.theace_" target="_blank" aria-label="Instagram"><i
-                            data-lucide="instagram"></i></a>
-                    <a href="https://facebook.com/yourusername" target="_blank" aria-label="Facebook"><i
-                            data-lucide="facebook"></i></a>
-                    <a href="https://twitter.com/yourusername" target="_blank" aria-label="Twitter"><i
-                            data-lucide="twitter"></i></a>
+
                     <a href="https://github.com/Manuel-Hub371" target="_blank" aria-label="GitHub"><i
                             data-lucide="github"></i></a>
                 </div>
@@ -152,6 +157,41 @@
                 metaKeywords.content = post.seoKeywords || '';
             } catch (error) {
                 postView.innerHTML = '<p>Error loading story details.</p>';
+            }
+
+            // Load Related Posts
+            const relatedContainer = document.getElementById('related-posts-container');
+            const relatedSection = document.getElementById('related-posts-section');
+
+            try {
+                const relatedPosts = await api.getRelatedPosts(postId);
+
+                if (relatedPosts.length > 0) {
+                    relatedSection.style.display = 'block';
+                    relatedContainer.innerHTML = relatedPosts.map(post => `
+                        <div class="glass-card post-card reveal">
+                            <img src="${api.getStaticUrl(post.coverImage) || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}">
+                            <span class="card-tag">Related</span>
+                            <h3>${post.title}</h3>
+                            <p style="color: var(--text-muted);">${post.content.substring(0, 100)}...</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: auto;">
+                                <span style="font-size: 0.8rem; color: var(--text-muted);">${formatDate(post.createdAt)}</span>
+                                <a href="post.html?id=${post._id}" class="btn btn-primary" style="padding: 6px 16px; font-size: 0.8rem;">Read</a>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    // Trigger animations for new elements
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) entry.target.classList.add('active');
+                        });
+                    }, { threshold: 0.1 });
+
+                    document.querySelectorAll('#related-posts-container .reveal').forEach(el => observer.observe(el));
+                }
+            } catch (error) {
+                console.error('Failed to load related posts:', error);
             }
         });
     </script>

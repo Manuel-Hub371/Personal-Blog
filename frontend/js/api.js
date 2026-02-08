@@ -89,6 +89,11 @@ const api = {
         return api.handleResponse(res);
     },
 
+    getRelatedPosts: async (id) => {
+        const res = await fetch(`${API_BASE_URL}/posts/${id}/related`, { cache: 'no-store' });
+        return api.handleResponse(res);
+    },
+
     createPost: async (postData) => {
         const res = await fetch(`${API_BASE_URL}/posts`, {
             method: 'POST',

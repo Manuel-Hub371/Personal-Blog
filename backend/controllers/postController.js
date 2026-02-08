@@ -92,6 +92,43 @@ exports.updatePost = async (req, res) => {
     }
 };
 
+// @desc    Get related posts
+// @route   GET /api/posts/:id/related
+exports.getRelatedPosts = async (req, res) => {
+    try {
+        const post = await BlogPost.findById(req.params.id);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+
+        let searchTags = post.tags || [];
+
+        // Also consider seoKeywords if available
+        if (post.seoKeywords) {
+            const keywords = post.seoKeywords.split(',').map(k => k.trim()).filter(k => k);
+            searchTags = [...new Set([...searchTags, ...keywords])];
+        }
+
+        if (searchTags.length === 0) {
+            return res.json([]);
+        }
+
+        const relatedPosts = await BlogPost.find({
+            _id: { $ne: post._id },
+            $or: [
+                { tags: { $in: searchTags } },
+                { seoKeywords: { $in: searchTags.map(t => new RegExp(t, 'i')) } }
+            ]
+        })
+            .limit(6)
+            .sort({ createdAt: -1 });
+
+        res.json(relatedPosts);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
 // @desc    Delete post
 // @route   DELETE /api/posts/:id
 exports.deletePost = async (req, res) => {
