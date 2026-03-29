@@ -4,7 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Story | Manuel</title>
+    <title>Post | Manuel</title>
+    <meta name="description" content="Read this insightful article on Manuel's personal blog.">
+    <meta name="keywords" content="Manuel, Blog, Technology, Software Engineering">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://manuel-hub.com/post.html">
+    <meta property="og:title" content="Post | Manuel">
+    <meta property="og:description" content="Read this insightful article on Manuel's personal blog.">
+    <meta property="og:image" content="https://manuel-hub.com/assets/blog-og.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Post | Manuel">
+    <meta property="twitter:description" content="Read this insightful article on Manuel's personal blog.">
+
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -17,7 +32,7 @@
 <body>
     <header>
         <div class="container nav">
-            <a href="index.html" class="logo">Manuel</a>
+            <a href="index.html" class="logo">Manuel-HUB</a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
@@ -35,6 +50,13 @@
     </header>
 
     <main class="container article-container">
+        <nav class="breadcrumb" aria-label="Breadcrumb" id="breadcrumb">
+            <a href="index.html">Home</a>
+            <span class="separator">/</span>
+            <a href="blog.html">Blog</a>
+            <span class="separator">/</span>
+            <span class="current" id="breadcrumb-post-title">Article</span>
+        </nav>
         <div id="post-view">
             <p>Gathering thoughts...</p>
         </div>
@@ -140,23 +162,26 @@
                 });
 
                 document.title = `${post.seoTitle || post.title} | Manuel`;
+                const breadcrumbTitle = document.getElementById('breadcrumb-post-title');
+                if (breadcrumbTitle) breadcrumbTitle.textContent = post.title;
 
                 // SEO Meta Tags
                 let metaDesc = document.querySelector('meta[name="description"]');
-                if (!metaDesc) {
-                    metaDesc = document.createElement('meta');
-                    metaDesc.name = 'description';
-                    document.head.appendChild(metaDesc);
-                }
-                metaDesc.content = post.seoDescription || '';
-
+                if (metaDesc) metaDesc.content = post.seoDescription || post.title;
+                
                 let metaKeywords = document.querySelector('meta[name="keywords"]');
-                if (!metaKeywords) {
-                    metaKeywords = document.createElement('meta');
-                    metaKeywords.name = 'keywords';
-                    document.head.appendChild(metaKeywords);
-                }
-                metaKeywords.content = post.seoKeywords || '';
+                if (metaKeywords) metaKeywords.content = post.seoKeywords || (post.tags ? post.tags.join(', ') : '');
+
+                // OG Tags
+                const ogTitle = document.querySelector('meta[property="og:title"]');
+                if (ogTitle) ogTitle.content = post.title;
+                
+                const ogDesc = document.querySelector('meta[property="og:description"]');
+                if (ogDesc) ogDesc.content = post.seoDescription || post.title;
+
+                const ogImage = document.querySelector('meta[property="og:image"]');
+                if (ogImage && post.coverImage) ogImage.content = api.getStaticUrl(post.coverImage);
+
             } catch (error) {
                 postView.innerHTML = '<p>Error loading story details.</p>';
             }

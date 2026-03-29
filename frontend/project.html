@@ -5,6 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Details | Manuel</title>
+    <meta name="description" content="Detailed overview of a software project by Manuel.">
+    <meta name="keywords" content="Manuel, Portfolio, Project, Software Development">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://manuel-hub.com/project.html">
+    <meta property="og:title" content="Project Details | Manuel">
+    <meta property="og:description" content="Explore this project developed by Manuel.">
+    <meta property="og:image" content="https://manuel-hub.com/assets/projects-og.jpg">
+
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7822736273025980"
@@ -14,7 +24,7 @@
 <body>
     <header>
         <div class="container nav">
-            <a href="index.html" class="logo">Manuel</a>
+            <a href="index.html" class="logo">Manuel-HUB</a>
             <ul class="nav-links">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="about.html">About</a></li>
@@ -32,6 +42,13 @@
     </header>
 
     <main class="container project-detail-main">
+        <nav class="breadcrumb" aria-label="Breadcrumb" id="breadcrumb">
+            <a href="index.html">Home</a>
+            <span class="separator">/</span>
+            <a href="projects.html">Projects</a>
+            <span class="separator">/</span>
+            <span class="current" id="breadcrumb-project-title">Project</span>
+        </nav>
         <article id="project-content" class="project-detail-card reveal">
             <p>Loading project details...</p>
         </article>
@@ -93,6 +110,20 @@
             try {
                 const project = await api.getProject(projectId);
                 document.title = `${project.title} | Manuel Projects`;
+                const breadcrumbTitle = document.getElementById('breadcrumb-project-title');
+                if (breadcrumbTitle) breadcrumbTitle.textContent = project.title;
+
+                // SEO Meta Tags
+                let metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc) metaDesc.content = project.description || project.title;
+                
+                // OG Tags
+                const ogTitle = document.querySelector('meta[property="og:title"]');
+                if (ogTitle) ogTitle.content = project.title;
+
+                const ogImage = document.querySelector('meta[property="og:image"]');
+                if (ogImage && project.image) ogImage.content = api.getStaticUrl(project.image);
+
 
                 container.innerHTML = `
                     <a href="projects.html" class="project-back-link">
