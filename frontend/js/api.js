@@ -15,6 +15,21 @@ const api = {
         return headers;
     },
 
+    // --- Caching Helpers ---
+    getCache: (key) => {
+        try {
+            const cached = localStorage.getItem(`cache_${key}`);
+            return cached ? JSON.parse(cached) : null;
+        } catch (e) { return null; }
+    },
+
+    setCache: (key, data) => {
+        try {
+            localStorage.setItem(`cache_${key}`, JSON.stringify(data));
+        } catch (e) { console.error('Cache error:', e); }
+    },
+
+
     // Helper to get full static URL for images
     getStaticUrl: (path) => {
         if (!path) return '';
@@ -80,14 +95,20 @@ const api = {
 
     // Posts
     getPosts: async () => {
-        const res = await fetch(`${API_BASE_URL}/posts`, { cache: 'no-store' });
-        return api.handleResponse(res);
+        const res = await fetch(`${API_BASE_URL}/posts`);
+        const data = await api.handleResponse(res);
+        api.setCache('posts', data);
+        return data;
     },
 
+
     getPost: async (id) => {
-        const res = await fetch(`${API_BASE_URL}/posts/${id}`, { cache: 'no-store' });
-        return api.handleResponse(res);
+        const res = await fetch(`${API_BASE_URL}/posts/${id}`);
+        const data = await api.handleResponse(res);
+        api.setCache(`post_${id}`, data);
+        return data;
     },
+
 
     getRelatedPosts: async (id) => {
         const res = await fetch(`${API_BASE_URL}/posts/${id}/related`, { cache: 'no-store' });
@@ -122,14 +143,20 @@ const api = {
 
     // Project Methods
     getProjects: async () => {
-        const res = await fetch(`${API_BASE_URL}/projects`, { cache: 'no-store' });
-        return api.handleResponse(res);
+        const res = await fetch(`${API_BASE_URL}/projects`);
+        const data = await api.handleResponse(res);
+        api.setCache('projects', data);
+        return data;
     },
 
+
     getProject: async (id) => {
-        const res = await fetch(`${API_BASE_URL}/projects/${id}`, { cache: 'no-store' });
-        return api.handleResponse(res);
+        const res = await fetch(`${API_BASE_URL}/projects/${id}`);
+        const data = await api.handleResponse(res);
+        api.setCache(`project_${id}`, data);
+        return data;
     },
+
 
     createProject: async (projectData) => {
         const res = await fetch(`${API_BASE_URL}/projects`, {
@@ -229,8 +256,11 @@ const api = {
     // About Content
     getAbout: async () => {
         const res = await fetch(`${API_BASE_URL}/about`);
-        return api.handleResponse(res);
+        const data = await api.handleResponse(res);
+        api.setCache('about', data);
+        return data;
     },
+
 
     updateAbout: async (data) => {
         const res = await fetch(`${API_BASE_URL}/about`, {

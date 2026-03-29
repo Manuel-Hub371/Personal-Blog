@@ -49,8 +49,9 @@
             <div class="reveal about-left">
                 <div class="profile-section">
                     <img id="profile-image"
-                        src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80"
-                        alt="Manuel" class="profile-img">
+                        src="assets/placeholder-profile.jpg"
+                        alt="Manuel" class="profile-img skeleton-avatar">
+
                     <div class="profile-details">
                         <h1 style="font-size: 2.5rem; margin-bottom: 8px;">Hello, I'm <span
                                 style="color: var(--primary);">Manuel</span>.</h1>
@@ -73,26 +74,34 @@
                     <!-- Bio Section -->
                     <div class="content-section">
                         <!-- <h3>Bio</h3> -->
-                        <p id="user-bio">
-                            Loading bio...
-                        </p>
+                        <div id="user-bio">
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-text" style="width: 80%;"></div>
+                            <div class="skeleton skeleton-text" style="width: 90%;"></div>
+                        </div>
                     </div>
+
 
                     <!-- Journey Section -->
                     <div class="content-section">
                         <h3>My Journey</h3>
-                        <p id="journey-text">
-                            Loading journey...
-                        </p>
+                        <div id="journey-text">
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-text" style="width: 85%;"></div>
+                        </div>
                     </div>
+
 
                     <!-- Skills Section -->
                     <div class="content-section">
                         <h3>Skills</h3>
                         <ul id="skills-list" class="skill-chips">
-                            <li class="skill-chip">Loading skills...</li>
+                            <li class="skeleton" style="width: 80px; height: 30px; border-radius: 20px;"></li>
+                            <li class="skeleton" style="width: 100px; height: 30px; border-radius: 20px;"></li>
+                            <li class="skeleton" style="width: 70px; height: 30px; border-radius: 20px;"></li>
                         </ul>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -143,49 +152,43 @@
     <script>
         // Load About Content from API
         document.addEventListener('DOMContentLoaded', async () => {
+            const bioEl = document.getElementById('user-bio');
+            const journeyEl = document.getElementById('journey-text');
+            const skillsList = document.getElementById('skills-list');
+            const profileImage = document.getElementById('profile-image');
+
+            const renderAbout = (data) => {
+                if (!data) return;
+                
+                if (data.bio) bioEl.innerHTML = `<p style="color: var(--text-muted); line-height: 1.6; font-size: 1.1rem;">${data.bio}</p>`;
+                if (data.journey) journeyEl.innerHTML = `<p style="color: var(--text-muted); line-height: 1.6; font-size: 1.1rem;">${data.journey}</p>`;
+                
+                if (data.profileImage) {
+                    profileImage.src = api.getStaticUrl(data.profileImage);
+                    profileImage.classList.remove('skeleton-avatar');
+                }
+
+                if (data.skills && Array.isArray(data.skills) && data.skills.length > 0) {
+                    skillsList.innerHTML = data.skills.map(skill => `<li class="skill-chip">${skill}</li>`).join('');
+                }
+            };
+
+            // 1. Hydrate from Cache
+            const cachedAbout = api.getCache('about');
+            if (cachedAbout) renderAbout(cachedAbout);
+
+            // 2. Fetch Fresh Data
             try {
                 const data = await api.getAbout();
-
-                // Update bio
-                if (data.bio) {
-                    document.getElementById('user-bio').textContent = data.bio;
-                } else {
-                    document.getElementById('user-bio').textContent = 'Bio not available.';
-                }
-
-                // Update journey
-                if (data.journey) {
-                    document.getElementById('journey-text').textContent = data.journey;
-                } else {
-                    document.getElementById('journey-text').textContent = 'Journey not available.';
-                }
-
-                // Update profile image
-                if (data.profileImage) {
-                    const profileImage = document.getElementById('profile-image');
-                    profileImage.src = api.getStaticUrl(data.profileImage);
-                    profileImage.alt = 'Manuel';
-                }
-
-                // Update skills list
-                const skillsList = document.getElementById('skills-list');
-                skillsList.innerHTML = '';
-                if (data.skills && Array.isArray(data.skills) && data.skills.length > 0) {
-                    data.skills.forEach(skill => {
-                        const li = document.createElement('li');
-                        li.className = 'skill-chip';
-                        li.textContent = skill;
-                        skillsList.appendChild(li);
-                    });
-                } else {
-                    skillsList.innerHTML = '<li class="skill-chip">No skills listed.</li>';
-                }
+                renderAbout(data);
             } catch (error) {
                 console.error('Error loading about content:', error);
-                document.getElementById('user-bio').textContent = 'Failed to load bio. Please check your connection.';
-                document.getElementById('journey-text').textContent = 'Failed to load journey.';
+                if (!cachedAbout) {
+                    bioEl.textContent = 'Failed to load bio. Please check your connection.';
+                }
             }
         });
+
     </script>
 </body>
 

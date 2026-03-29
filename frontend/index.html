@@ -73,16 +73,20 @@
             <div class="glass-card about-preview-card"
                 style="display: flex; align-items: center; gap: 40px; padding: 40px; max-width: 900px; width: 100%;">
                 <img id="home-about-img"
-                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&h=200&q=80"
+                    src="assets/placeholder-profile.jpg"
                     alt="Profile"
+                    loading="lazy"
+
                     style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary);">
                 <div style="flex: 1;">
                     <h2 class="section-title" style="text-align: left; margin-bottom: 16px;">About <span
                             style="color: var(--primary);">Me</span></h2>
-                    <p id="home-about-text"
-                        style="color: var(--text-muted); line-height: 1.6; margin-bottom: 24px; font-size: 1.1rem;">
-                        Loading bio...
-                    </p>
+                    <div id="home-about-text" style="margin-bottom: 24px;">
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text" style="width: 80%;"></div>
+                        <div class="skeleton skeleton-text" style="width: 90%;"></div>
+                    </div>
+
                     <a href="about.html" class="btn btn-outline">Read More</a>
                 </div>
             </div>
@@ -91,17 +95,21 @@
         <section class="container reveal" style="padding: 100px 24px;">
             <h2 class="section-title">Latest <span style="color: var(--primary);">Thoughts</span></h2>
             <div id="posts-container" class="card-grid">
-                <!-- Posts loaded via JS -->
-                <p>Loading inspiration...</p>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
             </div>
+
         </section>
 
         <section class="container reveal" style="padding: 100px 24px; border-top: 1px solid var(--border-glass);">
             <h2 class="section-title">Selected <span style="color: var(--primary);">Works</span></h2>
             <div id="projects-container" class="card-grid">
-                <!-- Projects loaded via JS -->
-                <p>Loading projects...</p>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
             </div>
+
         </section>
     </main>
 
@@ -151,43 +159,36 @@
         document.addEventListener('DOMContentLoaded', async () => {
             const postsContainer = document.getElementById('posts-container');
             const projectsContainer = document.getElementById('projects-container');
+            const aboutText = document.getElementById('home-about-text');
+            const aboutImg = document.getElementById('home-about-img');
 
-            try {
-                // Load Posts
-                const posts = await api.getPosts();
-                postsContainer.innerHTML = '';
-                if (posts.length === 0) {
+            const renderPosts = (posts) => {
+                if (!posts || posts.length === 0) {
                     postsContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">No articles yet. Check back soon!</p>';
-                } else {
-                    posts.slice(0, 3).forEach(post => {
-                        const card = document.createElement('div');
-                        card.className = 'glass-card post-card reveal';
-                        card.innerHTML = `
-                            <img src="${api.getStaticUrl(post.coverImage) || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}">
-                            <span class="card-tag">Article</span>
-                            <h3>${post.title}</h3>
-                            <p style="color: var(--text-muted);">${post.content.substring(0, 100)}...</p>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <span style="font-size: 0.8rem; color: var(--text-muted);">${formatDate(post.createdAt)}</span>
-                                <a href="post.html?id=${post._id}" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">Read More</a>
-                            </div>
-                        `;
-                        postsContainer.appendChild(card);
-                    });
+                    return;
                 }
+                postsContainer.innerHTML = posts.slice(0, 3).map(post => `
+                    <div class="glass-card post-card reveal active">
+                        <img src="${api.getStaticUrl(post.coverImage) || 'assets/placeholder-blog.jpg'}" alt="${post.title}" loading="lazy">
+                        <span class="card-tag">Article</span>
+                        <h3>${post.title}</h3>
+                        <p style="color: var(--text-muted);">${post.content.substring(0, 100)}...</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">${formatDate(post.createdAt)}</span>
+                            <a href="post.html?id=${post._id}" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">Read More</a>
+                        </div>
+                    </div>
+                `).join('');
+            };
 
-                // Load Projects
-                const projects = await api.getProjects();
-                projectsContainer.innerHTML = '';
-                if (projects.length === 0) {
+            const renderProjects = (projects) => {
+                if (!projects || projects.length === 0) {
                     projectsContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">No projects showcased yet.</p>';
-                } else {
-                    // Show only first 3 projects
-                    projects.slice(0, 3).forEach(project => {
-                        const card = document.createElement('div');
-                        card.className = 'glass-card project-card reveal';
-                        card.innerHTML = `
-                        <img src="${api.getStaticUrl(project.image) || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80'}" alt="${project.title}">
+                    return;
+                }
+                projectsContainer.innerHTML = projects.slice(0, 3).map(project => `
+                    <div class="glass-card project-card reveal active">
+                        <img src="${api.getStaticUrl(project.image) || 'assets/placeholder-project.jpg'}" alt="${project.title}" loading="lazy">
                         <span class="card-tag">Project</span>
                         <h3>${project.title}</h3>
                         <p style="color: var(--text-muted);">${project.description}</p>
@@ -195,33 +196,46 @@
                             ${(project.technologies || []).map(tech => `<span style="font-size: 0.7rem; background: var(--border-glass); padding: 4px 12px; border-radius: 20px;">${tech}</span>`).join('')}
                         </div>
                         ${project.link ? `<a href="${project.link}" target="_blank" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">View Project</a>` : ''}
-                    `;
-                        projectsContainer.appendChild(card);
-                    });
-                }
+                    </div>
+                `).join('');
+            };
 
-                // Re-initialize reveal observer for new elements
-                const revealItems = document.querySelectorAll('.reveal');
-                const revealObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) entry.target.classList.add('active');
-                    });
-                }, { threshold: 0.1 });
-                revealItems.forEach(item => revealObserver.observe(item));
+            const renderAbout = (about) => {
+                if (!about) return;
+                if (about.bio) aboutText.innerHTML = `<p style="color: var(--text-muted); line-height: 1.6; font-size: 1.1rem;">${about.bio.substring(0, 150)}...</p>`;
+                if (about.profileImage) aboutImg.src = api.getStaticUrl(about.profileImage);
+            };
 
-            } catch (error) {
-                console.error("Error loading home page content:", error);
-            }
+            // 1. Hydrate from Cache
+            const cachedPosts = api.getCache('posts');
+            const cachedProjects = api.getCache('projects');
+            const cachedAbout = api.getCache('about');
 
-            // Load About Preview
+            if (cachedPosts) renderPosts(cachedPosts);
+            if (cachedProjects) renderProjects(cachedProjects);
+            if (cachedAbout) renderAbout(cachedAbout);
+
+            // 2. Fetch Fresh Data
             try {
-                const about = await api.getAbout();
-                if (about) {
-                    if (about.bio) document.getElementById('home-about-text').innerText = about.bio.substring(0, 150) + '...';
-                    if (about.profileImage) document.getElementById('home-about-img').src = api.getStaticUrl(about.profileImage);
+                const [posts, projects, about] = await Promise.all([
+                    api.getPosts(),
+                    api.getProjects(),
+                    api.getAbout()
+                ]);
+                
+                renderPosts(posts);
+                renderProjects(projects);
+                renderAbout(about);
+
+                // Re-initialize reveal observer for any new elements
+                if (window.revealObserver) {
+                    document.querySelectorAll('.reveal').forEach(el => window.revealObserver.observe(el));
                 }
-            } catch (e) { console.error("Error loading about:", e); }
+            } catch (error) {
+                console.error("Error loading fresh content:", error);
+            }
         });
+
     </script>
 </body>
 

@@ -50,8 +50,13 @@
             <span class="current" id="breadcrumb-project-title">Project</span>
         </nav>
         <article id="project-content" class="project-detail-card reveal">
-            <p>Loading project details...</p>
+            <div class="skeleton skeleton-title" style="width: 70%; height: 3.5rem;"></div>
+            <div class="skeleton skeleton-image" style="height: 400px; margin-bottom: 2rem;"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text" style="width: 60%;"></div>
         </article>
+
     </main>
 
     <footer>
@@ -107,15 +112,19 @@
                 return;
             }
 
-            try {
-                const project = await api.getProject(projectId);
-                document.title = `${project.title} | Manuel Projects`;
+            const renderProject = (project) => {
+                if (!project || project.message) {
+                    container.innerHTML = `<p class="error-msg">${project?.message || 'Error loading project.'} <a href="projects.html">Return to list</a></p>`;
+                    return;
+                }
+
+                document.title = `${project.seoTitle || project.title} | Manuel Projects`;
                 const breadcrumbTitle = document.getElementById('breadcrumb-project-title');
                 if (breadcrumbTitle) breadcrumbTitle.textContent = project.title;
 
                 // SEO Meta Tags
                 let metaDesc = document.querySelector('meta[name="description"]');
-                if (metaDesc) metaDesc.content = project.description || project.title;
+                if (metaDesc) metaDesc.content = project.seoDescription || project.description || project.title;
                 
                 // OG Tags
                 const ogTitle = document.querySelector('meta[property="og:title"]');
@@ -123,7 +132,6 @@
 
                 const ogImage = document.querySelector('meta[property="og:image"]');
                 if (ogImage && project.image) ogImage.content = api.getStaticUrl(project.image);
-
 
                 container.innerHTML = `
                     <a href="projects.html" class="project-back-link">
@@ -147,9 +155,10 @@
                     </div>
 
                     <div class="project-image-container">
-                        <img src="${api.getStaticUrl(project.image) || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c'}" 
+                        <img src="${api.getStaticUrl(project.image) || 'assets/placeholder-project.jpg'}" 
                              class="project-main-image"
-                             alt="${project.title}">
+                             alt="${project.title}"
+                             loading="lazy">
                     </div>
 
                     <div class="project-content content-html">
@@ -173,11 +182,24 @@
                         img.src = api.getStaticUrl(src);
                     }
                 });
+            };
 
+            // 1. Hydrate from Cache
+            const cachedProject = api.getCache(`project_${projectId}`);
+            if (cachedProject) renderProject(cachedProject);
+
+            // 2. Fetch Fresh Data
+            try {
+                const project = await api.getProject(projectId);
+                renderProject(project);
             } catch (error) {
-                container.innerHTML = '<p class="error-msg">Error loading project. <a href="projects.html">Return to list</a></p>';
+                console.error("Error loading project details:", error);
+                if (!cachedProject) {
+                    container.innerHTML = '<p class="error-msg">Error loading project. <a href="projects.html">Return to list</a></p>';
+                }
             }
         });
+
     </script>
 </body>
 

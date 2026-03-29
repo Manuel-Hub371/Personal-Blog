@@ -58,8 +58,13 @@
             <span class="current" id="breadcrumb-post-title">Article</span>
         </nav>
         <div id="post-view">
-            <p>Gathering thoughts...</p>
+            <div class="skeleton skeleton-title" style="width: 70%; height: 3.5rem;"></div>
+            <div class="skeleton skeleton-image" style="height: 400px; margin-bottom: 2rem;"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text" style="width: 60%;"></div>
         </div>
+
 
     </main>
 
@@ -125,10 +130,9 @@
                 return;
             }
 
-            try {
-                const post = await api.getPost(postId);
-                if (post.message) {
-                    postView.innerHTML = `<p>${post.message}</p>`;
+            const renderPost = (post) => {
+                if (!post || post.message) {
+                    postView.innerHTML = `<p>${post.message || 'Error loading story.'}</p>`;
                     return;
                 }
 
@@ -137,20 +141,18 @@
                         <header class="post-header">
                             <span class="card-tag">Published ${formatDate(post.createdAt)}</span>
                             <h1 class="post-title">${post.title}</h1>
-                            ${post.tags.length ? `<div class="post-tags">
+                            ${post.tags && post.tags.length ? `<div class="post-tags">
                                 ${post.tags.map(t => `<span class="post-tag">${t}</span>`).join('')}
                             </div>` : ''}
                         </header>
                         
-                        <img class="post-cover" src="${api.getStaticUrl(post.coverImage) || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200'}" alt="${post.title}">
+                        <img class="post-cover" src="${api.getStaticUrl(post.coverImage) || 'assets/placeholder-blog.jpg'}" alt="${post.title}" loading="lazy">
                         
                         <div class="glass-card post-body">
                             <div class="content-html">${post.content}</div>
                         </div>
                     </article>
                 `;
-
-                // Content style injection removed - handled by style.css
 
                 // Fix image paths in content
                 const contentImages = postView.querySelectorAll('.content-html img');
@@ -181,9 +183,19 @@
 
                 const ogImage = document.querySelector('meta[property="og:image"]');
                 if (ogImage && post.coverImage) ogImage.content = api.getStaticUrl(post.coverImage);
+            };
 
+            // 1. Hydrate from Cache
+            const cachedPost = api.getCache(`post_${postId}`);
+            if (cachedPost) renderPost(cachedPost);
+
+            // 2. Fetch Fresh Data
+            try {
+                const post = await api.getPost(postId);
+                renderPost(post);
             } catch (error) {
-                postView.innerHTML = '<p>Error loading story details.</p>';
+                console.error("Error loading post details:", error);
+                if (!cachedPost) postView.innerHTML = '<p>Error loading story details.</p>';
             }
 
             // Load Related Posts
@@ -196,8 +208,8 @@
                 if (relatedPosts.length > 0) {
                     relatedSection.style.display = 'block';
                     relatedContainer.innerHTML = relatedPosts.map(post => `
-                        <div class="glass-card post-card reveal">
-                            <img src="${api.getStaticUrl(post.coverImage) || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}">
+                        <div class="glass-card post-card reveal active">
+                            <img src="${api.getStaticUrl(post.coverImage) || 'assets/placeholder-blog.jpg'}" alt="${post.title}" loading="lazy">
                             <span class="card-tag">Related</span>
                             <h3>${post.title}</h3>
                             <p style="color: var(--text-muted);">${post.content.substring(0, 100)}...</p>
@@ -208,19 +220,15 @@
                         </div>
                     `).join('');
 
-                    // Trigger animations for new elements
-                    const observer = new IntersectionObserver((entries) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) entry.target.classList.add('active');
-                        });
-                    }, { threshold: 0.1 });
-
-                    document.querySelectorAll('#related-posts-container .reveal').forEach(el => observer.observe(el));
+                    if (window.revealObserver) {
+                        document.querySelectorAll('#related-posts-container .reveal').forEach(el => window.revealObserver.observe(el));
+                    }
                 }
             } catch (error) {
                 console.error('Failed to load related posts:', error);
             }
         });
+
     </script>
 </body>
 

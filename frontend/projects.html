@@ -52,8 +52,14 @@
         </div>
 
         <div id="all-projects-container" class="card-grid">
-            <p>Loading projects...</p>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
         </div>
+
     </main>
 
     <footer>
@@ -101,25 +107,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const projectsContainer = document.getElementById('all-projects-container');
-            const observerOptions = { threshold: 0.1 };
-            const revealObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-            }, observerOptions);
-
-            try {
-                const projects = await api.getProjects();
-                projectsContainer.innerHTML = '';
-
-                if (projects.length === 0) {
-                    projectsContainer.innerHTML = '<p>No projects showcased yet. Check back later!</p>';
+            
+            const renderProjects = (projects) => {
+                if (!projects || projects.length === 0) {
+                    projectsContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">No projects showcased yet. Check back later!</p>';
                     return;
                 }
-
-                projects.forEach(project => {
-                    const card = document.createElement('div');
-                    card.className = 'glass-card project-card reveal';
-                    card.innerHTML = `
-                        <img src="${api.getStaticUrl(project.image) || 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80'}" alt="${project.title}">
+                projectsContainer.innerHTML = projects.map(project => `
+                    <div class="glass-card project-card reveal active">
+                        <img src="${api.getStaticUrl(project.image) || 'assets/placeholder-project.jpg'}" alt="${project.title}" loading="lazy">
                         <span class="card-tag">Project</span>
                         <h3>${project.title}</h3>
                         <p style="color: var(--text-muted);">${project.description}</p>
@@ -127,14 +123,28 @@
                             ${(project.technologies || []).map(tech => `<span style="font-size: 0.7rem; background: var(--border-glass); padding: 4px 12px; border-radius: 20px;">${tech}</span>`).join('')}
                         </div>
                         <a href="project.html?id=${project._id}" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">View Case Study</a>
-                    `;
-                    projectsContainer.appendChild(card);
-                    revealObserver.observe(card);
-                });
+                    </div>
+                `).join('');
+
+                if (window.revealObserver) {
+                    document.querySelectorAll('.reveal').forEach(el => window.revealObserver.observe(el));
+                }
+            };
+
+            // 1. Hydrate from Cache
+            const cachedProjects = api.getCache('projects');
+            if (cachedProjects) renderProjects(cachedProjects);
+
+            // 2. Fetch Fresh Data
+            try {
+                const projects = await api.getProjects();
+                renderProjects(projects);
             } catch (error) {
-                projectsContainer.innerHTML = '<p>Error loading projects.</p>';
+                console.error("Error loading projects:", error);
+                if (!cachedProjects) projectsContainer.innerHTML = '<p>Error loading projects.</p>';
             }
         });
+
     </script>
 </body>
 

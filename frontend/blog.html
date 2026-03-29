@@ -52,8 +52,14 @@
         </div>
 
         <div id="all-posts-container" class="card-grid">
-            <p>Loading posts...</p>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
         </div>
+
     </main>
 
     <footer>
@@ -101,25 +107,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const postsContainer = document.getElementById('all-posts-container');
-            const observerOptions = { threshold: 0.1 };
-            const revealObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-            }, observerOptions);
-
-            try {
-                const posts = await api.getPosts();
-                postsContainer.innerHTML = '';
-
-                if (posts.length === 0) {
-                    postsContainer.innerHTML = '<p>No stories found yet. Come back later!</p>';
+            
+            const renderPosts = (posts) => {
+                if (!posts || posts.length === 0) {
+                    postsContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">No stories found yet. Come back later!</p>';
                     return;
                 }
-
-                posts.forEach(post => {
-                    const card = document.createElement('div');
-                    card.className = 'glass-card post-card reveal';
-                    card.innerHTML = `
-                        <img src="${api.getStaticUrl(post.coverImage) || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80'}" alt="${post.title}">
+                postsContainer.innerHTML = posts.map(post => `
+                    <div class="glass-card post-card reveal active">
+                        <img src="${api.getStaticUrl(post.coverImage) || 'assets/placeholder-blog.jpg'}" alt="${post.title}" loading="lazy">
                         <span class="card-tag">Article</span>
                         <h3>${post.title}</h3>
                         <p style="color: var(--text-muted);">${post.content.substring(0, 120)}...</p>
@@ -127,14 +123,29 @@
                             <span style="font-size: 0.8rem; color: var(--text-muted);">${formatDate(post.createdAt)}</span>
                             <a href="post.html?id=${post._id}" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">Read Story</a>
                         </div>
-                    `;
-                    postsContainer.appendChild(card);
-                    revealObserver.observe(card);
-                });
+                    </div>
+                `).join('');
+
+                // Observe any new reveal elements
+                if (window.revealObserver) {
+                    document.querySelectorAll('.reveal').forEach(el => window.revealObserver.observe(el));
+                }
+            };
+
+            // 1. Hydrate from Cache
+            const cachedPosts = api.getCache('posts');
+            if (cachedPosts) renderPosts(cachedPosts);
+
+            // 2. Fetch Fresh Data
+            try {
+                const posts = await api.getPosts();
+                renderPosts(posts);
             } catch (error) {
-                postsContainer.innerHTML = '<p>Error loading our stories.</p>';
+                console.error("Error loading blog posts:", error);
+                if (!cachedPosts) postsContainer.innerHTML = '<p>Error loading our stories.</p>';
             }
         });
+
     </script>
 </body>
 
