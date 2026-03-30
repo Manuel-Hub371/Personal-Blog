@@ -43,23 +43,20 @@
         </div>
     </header>
 
-    <main class="container" style="padding-top: 160px;">
-        <div class="reveal">
-            <h1 style="font-size: 3.5rem; margin-bottom: 16px;">Selected <span
-                    style="color: var(--primary);">Works</span></h1>
-            <p style="color: var(--text-muted); font-size: 1.25rem; max-width: 600px; margin-bottom: 64px;">A
-                collection of projects I've built, experimenting with new technologies and design systems.</p>
-        </div>
-
-        <div id="all-projects-container" class="card-grid">
-            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
-            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
-            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
-            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
-            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
-            <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
-        </div>
-
+    <main>
+        <section class="container reveal" style="padding: 140px 24px 80px;">
+            <div style="text-align: center; max-width: 800px; margin: 0 auto 60px;">
+                <h1 style="font-size: clamp(3rem, 8vw, 5rem); margin-bottom: 24px;">Built with <span style="background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Purpose</span>.</h1>
+                <p class="text-muted" style="font-size: 1.25rem;">A selection of architectural solutions and aesthetic experiments I've brought to life.</p>
+            </div>
+            
+            <div id="projects-grid" class="card-grid">
+                <!-- Skeletons -->
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            </div>
+        </section>
     </main>
 
     <footer>
@@ -91,11 +88,9 @@
 
             <div class="footer-bottom">
                 <div class="socials">
-                    <a href="https://wa.me/0549820094" target="_blank" aria-label="WhatsApp"><i
-                            data-lucide="phone"></i></a>
-
-                    <a href="https://github.com/Manuel-Hub371" target="_blank" aria-label="GitHub"><i
-                            data-lucide="github"></i></a>
+                        <a href="https://github.com/Manuel-Hub371" target="_blank" rel="noopener" aria-label="GitHub Profile" style="color: inherit;"><i data-lucide="github"></i></a>
+                        <a href="#" aria-label="LinkedIn Profile" style="color: inherit;"><i data-lucide="linkedin"></i></a>
+                        <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter Profile" style="color: inherit;"><i data-lucide="twitter"></i></a>
                 </div>
                 <p>&copy; 2026 Manuel. All rights reserved.</p>
             </div>
@@ -106,29 +101,29 @@
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            const projectsContainer = document.getElementById('all-projects-container');
+            const projectsGrid = document.getElementById('projects-grid');
             
             const renderProjects = (projects) => {
                 if (!projects || projects.length === 0) {
-                    projectsContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">No projects showcased yet. Check back later!</p>';
+                    projectsGrid.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">No projects displayed yet.</p>';
                     return;
                 }
-                projectsContainer.innerHTML = projects.map(project => `
-                    <div class="glass-card project-card reveal active">
-                        <img src="${api.getStaticUrl(project.image) || 'assets/placeholder-project.jpg'}" alt="${project.title}" loading="lazy">
-                        <span class="card-tag">Project</span>
-                        <h3>${project.title}</h3>
-                        <p style="color: var(--text-muted);">${project.description}</p>
-                        <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-                            ${(project.technologies || []).map(tech => `<span style="font-size: 0.7rem; background: var(--border-glass); padding: 4px 12px; border-radius: 20px;">${tech}</span>`).join('')}
+                
+                projectsGrid.innerHTML = projects.map(project => `
+                    <div class="glass-card reveal active" style="height: 100%; display: flex; flex-direction: column;">
+                        <img src="${api.getStaticUrl(project.image) || 'assets/placeholder-project.png'}" alt="${project.title}" loading="lazy" 
+                             style="width: 100%; height: 280px; object-fit: cover; border-radius: var(--radius-squircle); margin-bottom: 24px;">
+                        <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+                            ${(project.technologies || []).slice(0, 3).map(tech => `<span style="font-size: 0.7rem; background: var(--border-glass); padding: 6px 14px; border-radius: var(--radius-pill); font-weight: 600; color: var(--primary);">${tech}</span>`).join('')}
                         </div>
-                        <a href="project.html?id=${project._id}" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">View Case Study</a>
+                        <h2 style="font-size: 1.75rem; letter-spacing: -1px; margin-bottom: 12px;">${project.title}</h2>
+                        <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; flex-grow: 1;">${project.description}</p>
+                        <div style="display: flex; gap: 16px; align-items: center; margin-top: auto;">
+                            <a href="project.html?id=${project._id}" class="btn btn-primary" style="padding: 10px 24px; font-size: 0.85rem;">View Case Study</a>
+                            ${project.link ? `<a href="${project.link}" target="_blank" rel="noopener" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 600;">Live Site ↗</a>` : ''}
+                        </div>
                     </div>
                 `).join('');
-
-                if (window.revealObserver) {
-                    document.querySelectorAll('.reveal').forEach(el => window.revealObserver.observe(el));
-                }
             };
 
             // 1. Hydrate from Cache
