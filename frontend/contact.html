@@ -3,6 +3,21 @@
 
 <head>
     <meta charset="UTF-8">
+    <!-- Sentry SDK -->
+    <script src="https://browser.sentry-cdn.com/8.5.0/bundle.tracing.replay.min.js" 
+            crossorigin="anonymous"></script>
+    <script>
+        Sentry.init({
+            dsn: "REPLACE_WITH_YOUR_SENTRY_DSN",
+            integrations: [
+                Sentry.browserTracingIntegration(),
+                Sentry.replayIntegration(),
+            ],
+            tracesSampleRate: 1.0,
+            replaysSessionSampleRate: 0.1,
+            replaysOnErrorSampleRate: 1.0,
+        });
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact | Manuel - Get in Touch</title>
     <meta name="description" content="Reach out to Manuel for collaboration, project inquiries, or any professional questions about software engineering and design.">
