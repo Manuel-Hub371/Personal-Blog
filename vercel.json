@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "backend/server.js" },
+    { "source": "/((?!api/).*)", "destination": "frontend/$1" }
+  ],
+  "redirects": [
+    { "source": "/", "destination": "/index.html", "permanent": false }
+  ]
+}

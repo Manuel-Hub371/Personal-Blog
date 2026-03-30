@@ -528,15 +528,13 @@ textarea:focus {
     .section-title {
         font-size: 1.5rem;
         margin-bottom: 24px !important;
-        margin-left: 4px;
-        /* Center title on mobile for balance */
+        margin-left: 12px !important;
     }
 
     .card-grid {
-        grid-template-columns: repeat(2, 1fr);
-        /* 2 Columns */
-        gap: 12px;
-        /* Breathing space between cards */
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
     }
 
     .glass-card {
@@ -718,8 +716,8 @@ textarea:focus {
     }
 
     .card-grid {
-        grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-        gap: 28px;
+        grid-template-columns: repeat(2, 1fr) !important; /* Force 2 columns on tablets too for better mobile consistency */
+        gap: 16px;
     }
 
     .hero {
