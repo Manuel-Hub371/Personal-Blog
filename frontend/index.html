@@ -56,69 +56,60 @@
     </header>
 
     <main>
-        <section class="container reveal" style="padding: 120px 24px 60px;">
-            <div class="bento-grid">
-                <!-- Bio Card -->
-                <div class="glass-card bento-item large about-card">
-                    <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
-                        <div>
-                            <img id="home-about-img" src="assets/placeholder-profile.png" alt="Profile" loading="lazy" 
-                                 style="width: 100px; height: 100px; border-radius: var(--radius-squircle); object-fit: cover; margin-bottom: 24px; border: 2px solid var(--primary);">
-                            <h1 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 16px;">
-                                Crafting <span style="background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">digital magic</span> through code.
-                            </h1>
-                            <div id="home-about-text">
-                                <p class="text-muted" style="font-size: 1.2rem; max-width: 500px;">
-                                    I'm Manuel, a software artisan building the future of web experiences with precision and passion.
-                                </p>
-                            </div>
-                        </div>
-                        <div style="display: flex; gap: 16px; margin-top: 32px;">
-                            <a href="about.html" class="btn btn-primary" style="padding: 12px 32px;">Discover More</a>
-                            <a href="contact.html" class="btn btn-outline" style="padding: 12px 32px;">Get in touch</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Latest Article Card -->
-                <div class="glass-card bento-item wide">
-                    <span class="card-tag">Latest Insight</span>
-                    <div id="featured-post-container">
-                        <div class="skeleton skeleton-title"></div>
-                        <div class="skeleton skeleton-text"></div>
-                    </div>
-                </div>
-
-                <!-- Skills Card -->
-                <div class="glass-card bento-item tall">
-                    <span class="card-tag">Technical Stack</span>
-                    <div id="skills-mini-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;">
-                        <!-- Filled by JS -->
-                    </div>
-                </div>
-
-                <!-- Featured Project Card -->
-                <div class="glass-card bento-item wide">
-                    <span class="card-tag">Featured Project</span>
-                    <div id="featured-project-container" style="display: flex; gap: 24px; align-items: center; height: 100%;">
-                        <div class="skeleton skeleton-image" style="width: 40%; height: 100%;"></div>
-                        <div style="flex: 1;">
-                            <div class="skeleton skeleton-title"></div>
-                            <div class="skeleton skeleton-text"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Socials Card -->
-                <div class="glass-card bento-item">
-                    <span class="card-tag">Connect</span>
-                    <div style="display: flex; gap: 20px; font-size: 1.5rem; margin-top: 24px; color: var(--primary);">
-                        <a href="https://github.com/Manuel-Hub371" target="_blank" rel="noopener" aria-label="GitHub Profile" style="color: inherit;"><i data-lucide="github"></i></a>
-                        <a href="#" aria-label="LinkedIn Profile" style="color: inherit;"><i data-lucide="linkedin"></i></a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener" aria-label="Twitter Profile" style="color: inherit;"><i data-lucide="twitter"></i></a>
-                    </div>
+        <section class="hero">
+            <div class="container hero-content reveal">
+                <h1>Crafting <span style="color: var(--primary);">experiences</span> through code.</h1>
+                <p>Welcome to my personal corner of the web. I'm Manuel, a developer exploring the intersection of
+                    technology and design.</p>
+                <div class="hero-btns">
+                    <a href="blog.html" class="btn btn-primary">Read My Blog</a>
+                    <a href="about.html" class="btn btn-outline" style="margin-left: 16px;">More About Me</a>
                 </div>
             </div>
+        </section>
+
+        <!-- ABOUT PREVIEW SECTION -->
+        <section class="container reveal" style="padding: 60px 24px; display: flex; justify-content: center;">
+            <div class="glass-card about-preview-card"
+                style="display: flex; align-items: center; gap: 40px; padding: 40px; max-width: 900px; width: 100%;">
+                <img id="home-about-img"
+                    src="assets/placeholder-profile.jpg"
+                    alt="Profile"
+                    loading="lazy"
+
+                    style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary);">
+                <div style="flex: 1;">
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 16px;">About <span
+                            style="color: var(--primary);">Me</span></h2>
+                    <div id="home-about-text" style="margin-bottom: 24px;">
+                        <div class="skeleton skeleton-text"></div>
+                        <div class="skeleton skeleton-text" style="width: 80%;"></div>
+                        <div class="skeleton skeleton-text" style="width: 90%;"></div>
+                    </div>
+
+                    <a href="about.html" class="btn btn-outline">Read More</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container reveal" style="padding: 100px 24px;">
+            <h2 class="section-title">Latest <span style="color: var(--primary);">Thoughts</span></h2>
+            <div id="posts-container" class="card-grid">
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            </div>
+
+        </section>
+
+        <section class="container reveal" style="padding: 100px 24px; border-top: 1px solid var(--border-glass);">
+            <h2 class="section-title">Selected <span style="color: var(--primary);">Works</span></h2>
+            <div id="projects-container" class="card-grid">
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+                <div class="glass-card"><div class="skeleton skeleton-image"></div><div class="skeleton skeleton-title"></div><div class="skeleton skeleton-text"></div></div>
+            </div>
+
         </section>
     </main>
 
@@ -166,50 +157,53 @@
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            const featuredPostContainer = document.getElementById('featured-post-container');
-            const featuredProjectContainer = document.getElementById('featured-project-container');
+            const postsContainer = document.getElementById('posts-container');
+            const projectsContainer = document.getElementById('projects-container');
             const aboutText = document.getElementById('home-about-text');
             const aboutImg = document.getElementById('home-about-img');
-            const skillsGrid = document.getElementById('skills-mini-grid');
 
             const renderPosts = (posts) => {
-                if (!posts || posts.length === 0) return;
-                const post = posts[0];
-                featuredPostContainer.innerHTML = `
-                    <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
-                        <h2 style="font-size: 1.8rem; margin: 0; letter-spacing: -1px;">${post.title}</h2>
-                        <p style="color: var(--text-muted); font-size: 1rem;">${post.content.substring(0, 80)}...</p>
-                        <a href="post.html?id=${post._id}" style="color: var(--primary); font-weight: 600; text-decoration: none; margin-top: 8px;">Explore Full Insight →</a>
+                if (!posts || posts.length === 0) {
+                    postsContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">No articles yet. Check back soon!</p>';
+                    return;
+                }
+                postsContainer.innerHTML = posts.slice(0, 3).map(post => `
+                    <div class="glass-card post-card reveal active">
+                        <img src="${api.getStaticUrl(post.coverImage) || 'assets/placeholder-blog.jpg'}" alt="${post.title}" loading="lazy">
+                        <span class="card-tag">Article</span>
+                        <h3>${post.title}</h3>
+                        <p style="color: var(--text-muted);">${post.content.substring(0, 100)}...</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span style="font-size: 0.8rem; color: var(--text-muted);">${formatDate(post.createdAt)}</span>
+                            <a href="post.html?id=${post._id}" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">Read More</a>
+                        </div>
                     </div>
-                `;
+                `).join('');
             };
 
             const renderProjects = (projects) => {
-                if (!projects || projects.length === 0) return;
-                const project = projects[0];
-                featuredProjectContainer.innerHTML = `
-                    <img src="${api.getStaticUrl(project.image) || 'assets/placeholder-project.png'}" alt="${project.title}" loading="lazy" 
-                         style="width: 140px; height: 140px; object-fit: cover; border-radius: 20px;">
-                    <div style="flex: 1;">
-                        <h2 style="font-size: 1.8rem; margin: 0; letter-spacing: -1px;">${project.title}</h2>
-                        <p style="color: var(--text-muted); margin-top: 8px;">${project.description.substring(0, 60)}...</p>
-                        <a href="project.html?id=${project._id}" style="color: var(--primary); font-weight: 600; text-decoration: none; display: block; margin-top: 12px;">Case Study →</a>
+                if (!projects || projects.length === 0) {
+                    projectsContainer.innerHTML = '<p class="text-muted" style="grid-column: 1/-1; text-align: center;">No projects showcased yet.</p>';
+                    return;
+                }
+                projectsContainer.innerHTML = projects.slice(0, 3).map(project => `
+                    <div class="glass-card project-card reveal active">
+                        <img src="${api.getStaticUrl(project.image) || 'assets/placeholder-project.jpg'}" alt="${project.title}" loading="lazy">
+                        <span class="card-tag">Project</span>
+                        <h3>${project.title}</h3>
+                        <p style="color: var(--text-muted);">${project.description}</p>
+                        <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
+                            ${(project.technologies || []).map(tech => `<span style="font-size: 0.7rem; background: var(--border-glass); padding: 4px 12px; border-radius: 20px;">${tech}</span>`).join('')}
+                        </div>
+                        ${project.link ? `<a href="${project.link}" target="_blank" class="btn btn-primary" style="padding: 8px 20px; font-size: 0.85rem;">View Project</a>` : ''}
                     </div>
-                `;
+                `).join('');
             };
 
             const renderAbout = (about) => {
                 if (!about) return;
                 if (about.bio) aboutText.innerHTML = `<p style="color: var(--text-muted); line-height: 1.6; font-size: 1.1rem;">${about.bio.substring(0, 150)}...</p>`;
                 if (about.profileImage) aboutImg.src = api.getStaticUrl(about.profileImage);
-                
-                if (about.skills && about.skills.length > 0) {
-                    skillsGrid.innerHTML = about.skills.slice(0, 6).map(skill => `
-                        <div style="background: var(--border-glass); padding: 8px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; text-align: center;">
-                            ${skill.name}
-                        </div>
-                    `).join('');
-                }
             };
 
             // 1. Hydrate from Cache

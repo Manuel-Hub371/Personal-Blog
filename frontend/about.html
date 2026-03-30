@@ -1,13 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | Manuel-HUB</title>
-    <meta name="description" content="Discover the story behind Manuel-HUB. An artisan of code building the future.">
+    <title>About | Manuel - Full-Stack Developer & Designer</title>
+    <meta name="description"
+        content="Learn more about Manuel, a Full-Stack Developer and Designer passionate about crafting premium digital experiences. Discover my journey and skills.">
+    <meta name="keywords" content="Manuel, Developer, Designer, Portfolio, Full-Stack, Web Development">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="profile">
+    <meta property="og:url" content="https://manuel-hub.com/about.html">
+    <meta property="og:title" content="About | Manuel - Full-Stack Developer & Designer">
+    <meta property="og:description"
+        content="Learn more about Manuel's journey, skills, and passion for creating state-of-the-art web applications.">
+    <meta property="og:image" content="https://manuel-hub.com/assets/about-og.jpg">
+
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7822736273025980"
+        crossorigin="anonymous"></script>
 </head>
+
 <body>
     <header>
         <div class="container nav">
@@ -28,45 +43,68 @@
         </div>
     </header>
 
-    <main>
-        <section class="container reveal" style="padding: 160px 24px 80px;">
-            <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 80px; align-items: start;">
-                <div class="sticky-top" style="position: sticky; top: 120px;">
-                    <img id="about-profile-img" src="assets/placeholder-profile.png" alt="Manuel" 
-                         style="width: 100%; aspect-ratio: 1; border-radius: var(--radius-squircle); object-fit: cover; border: 1px solid var(--border-glass); box-shadow: var(--shadow-premium);">
-                    <div style="margin-top: 40px; display: flex; flex-direction: column; gap: 24px;">
-                        <div class="glass-card" style="padding: 24px;">
-                            <span class="card-tag">Location</span>
-                            <p style="font-weight: 600; margin-top: 8px;">Accra, Ghana</p>
-                        </div>
-                        <div class="glass-card" style="padding: 24px;">
-                            <span class="card-tag">Focus</span>
-                            <p style="font-weight: 600; margin-top: 8px;">Architecture & UX</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div>
-                    <h1 style="font-size: clamp(3rem, 8vw, 5rem); line-height: 1; margin-bottom: 48px; letter-spacing: -4px;">
-                        Design. <br>
-                        Code. <br>
-                        <span style="background: linear-gradient(to right, var(--primary), var(--secondary)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">Succeed.</span>
-                    </h1>
-                    
-                    <div id="about-bio" style="font-size: 1.25rem; color: var(--text-muted); line-height: 1.8;">
-                        <!-- Bio content -->
-                        <div class="skeleton skeleton-text"></div>
-                        <div class="skeleton skeleton-text" style="width: 80%;"></div>
-                        <div class="skeleton skeleton-text" style="width: 90%;"></div>
-                    </div>
+    <main class="container" style="padding-top: 140px;">
+        <div class="about-container">
+            <!-- Profile Section -->
+            <div class="reveal about-left">
+                <div class="profile-section">
+                    <img id="profile-image"
+                        src="assets/placeholder-profile.jpg"
+                        alt="Manuel" class="profile-img skeleton-avatar">
 
-                    <h2 style="margin-top: 80px; font-size: 3rem; letter-spacing: -2px;">The Stack</h2>
-                    <div id="skills-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; margin-top: 32px;">
-                        <!-- Filled by JS -->
+                    <div class="profile-details">
+                        <h1 style="font-size: 2.5rem; margin-bottom: 8px;">Hello, I'm <span
+                                style="color: var(--primary);">Manuel</span>.</h1>
+                        <p style="color: var(--text-muted); font-size: 1.1rem;">Full-Stack Developer & Designer</p>
+
+                        <!-- Desktop Social Icons (Visible only on Desktop via CSS) -->
+                        <div class="profile-socials">
+                            <a href="https://github.com/Manuel-Hub371" target="_blank" aria-label="GitHub"><i
+                                    data-lucide="github"></i></a>
+                            <a href="https://linkedin.com/in/yourusername" target="_blank" aria-label="LinkedIn"><i
+                                    data-lucide="linkedin"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
+
+            <!-- Content Container -->
+            <div class="reveal about-right">
+                <div class="about-info">
+                    <!-- Bio Section -->
+                    <div class="content-section">
+                        <!-- <h3>Bio</h3> -->
+                        <div id="user-bio">
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-text" style="width: 80%;"></div>
+                            <div class="skeleton skeleton-text" style="width: 90%;"></div>
+                        </div>
+                    </div>
+
+
+                    <!-- Journey Section -->
+                    <div class="content-section">
+                        <h3>My Journey</h3>
+                        <div id="journey-text">
+                            <div class="skeleton skeleton-text"></div>
+                            <div class="skeleton skeleton-text" style="width: 85%;"></div>
+                        </div>
+                    </div>
+
+
+                    <!-- Skills Section -->
+                    <div class="content-section">
+                        <h3>Skills</h3>
+                        <ul id="skills-list" class="skill-chips">
+                            <li class="skeleton" style="width: 80px; height: 30px; border-radius: 20px;"></li>
+                            <li class="skeleton" style="width: 100px; height: 30px; border-radius: 20px;"></li>
+                            <li class="skeleton" style="width: 70px; height: 30px; border-radius: 20px;"></li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
@@ -74,27 +112,37 @@
             <div class="footer-grid">
                 <div class="footer-column">
                     <h4>Manuel-HUB</h4>
-                    <p>Crafting digital magic from the heart of West Africa.</p>
+                    <p>Crafting digital experiences with passion and precision. Exploring the intersection of design and
+                        code.</p>
                 </div>
                 <div class="footer-column">
-                    <h4>Navigate</h4>
+                    <h4>Quick Links</h4>
                     <ul class="footer-links">
                         <li><a href="index.html">Home</a></li>
                         <li><a href="about.html">About</a></li>
                         <li><a href="blog.html">Blog</a></li>
+                        <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
                     <h4>Legal</h4>
                     <ul class="footer-links">
-                        <li><a href="privacy.html">Privacy</a></li>
-                        <li><a href="terms.html">Terms</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms & Conditions</a></li>
                         <li><a href="disclaimer.html">Disclaimer</a></li>
                     </ul>
                 </div>
             </div>
+
             <div class="footer-bottom">
-                <p>&copy; 2026 Manuel. Built with purpose.</p>
+                <div class="socials">
+                    <a href="https://wa.me/0549820094" target="_blank" aria-label="WhatsApp"><i
+                            data-lucide="phone"></i></a>
+
+                    <a href="https://github.com/Manuel-Hub371" target="_blank" aria-label="GitHub"><i
+                            data-lucide="github"></i></a>
+                </div>
+                <p>&copy; 2026 Manuel. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -102,39 +150,46 @@
     <script src="js/api.js"></script>
     <script src="js/main.js"></script>
     <script>
+        // Load About Content from API
         document.addEventListener('DOMContentLoaded', async () => {
-            const bioContainer = document.getElementById('about-bio');
-            const profileImg = document.getElementById('about-profile-img');
-            const skillsGrid = document.getElementById('skills-grid');
+            const bioEl = document.getElementById('user-bio');
+            const journeyEl = document.getElementById('journey-text');
+            const skillsList = document.getElementById('skills-list');
+            const profileImage = document.getElementById('profile-image');
 
-            const renderAbout = (about) => {
-                if (!about) return;
-                bioContainer.innerHTML = `<p>${about.bio || 'Crafting the future of web experiences...'}</p>`;
-                if (about.profileImage) profileImg.src = api.getStaticUrl(about.profileImage);
+            const renderAbout = (data) => {
+                if (!data) return;
                 
-                if (about.skills && about.skills.length > 0) {
-                    skillsGrid.innerHTML = about.skills.map(skill => `
-                        <div class="glass-card reveal active" style="padding: 24px; text-align: center; border-radius: var(--radius-squircle);">
-                            <div style="font-weight: 800; font-size: 1rem; color: var(--text-main);">${skill.name}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; font-weight: 600;">${skill.level}</div>
-                        </div>
-                    `).join('');
+                if (data.bio) bioEl.innerHTML = `<p style="color: var(--text-muted); line-height: 1.6; font-size: 1.1rem;">${data.bio}</p>`;
+                if (data.journey) journeyEl.innerHTML = `<p style="color: var(--text-muted); line-height: 1.6; font-size: 1.1rem;">${data.journey}</p>`;
+                
+                if (data.profileImage) {
+                    profileImage.src = api.getStaticUrl(data.profileImage);
+                    profileImage.classList.remove('skeleton-avatar');
+                }
+
+                if (data.skills && Array.isArray(data.skills) && data.skills.length > 0) {
+                    skillsList.innerHTML = data.skills.map(skill => `<li class="skill-chip">${skill}</li>`).join('');
                 }
             };
 
-            // 1. Cache
-            const cachedAbout = api.getCache(api.ENDPOINTS.ABOUT);
+            // 1. Hydrate from Cache
+            const cachedAbout = api.getCache('about');
             if (cachedAbout) renderAbout(cachedAbout);
 
-            // 2. Fresh
+            // 2. Fetch Fresh Data
             try {
-                const about = await api.getAbout();
-                renderAbout(about);
-                api.setCache(api.ENDPOINTS.ABOUT, about);
+                const data = await api.getAbout();
+                renderAbout(data);
             } catch (error) {
-                console.error('Failed to load about data:', error);
+                console.error('Error loading about content:', error);
+                if (!cachedAbout) {
+                    bioEl.textContent = 'Failed to load bio. Please check your connection.';
+                }
             }
         });
+
     </script>
 </body>
+
 </html>
